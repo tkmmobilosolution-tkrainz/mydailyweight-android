@@ -44,6 +44,7 @@
             android:textSize="20dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:focusable="true"
             android:background="@color/secondaryGray"
             android:textColor="@color/primaryYellow"
             android:textCursorDrawable="@null"
