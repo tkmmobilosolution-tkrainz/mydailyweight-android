@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MyDailyWeight</string>
+    <string name="banner_ad_unit_id">ca-app-pub-9184630521515163/5534260932</string>
+    <string name="interstital_ad_unit_id">ca-app-pub-9184630521515163/7010994132</string>
+    <string name="ad_mob_app_id">ca-app-pub-9184630521515163~4057527733</string>
+
+    <string name="weight">Weight:</string>
+    <string name="date">Date:</string>
+    <string name="add_weight_description">Enter your weight here.</string>
+
+    <string name="add_hint">Hint: You already entered your weight today. Try again tomorrow.</string>
+    <string name="no_weight_entered">Please enter a weight.</string>
+
+    <string name="add_first_weight">Add your first weight entry</string>
+    <string name="add_another_weight">Add your today´s weight</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+</resources>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryGray">
+
+    <TextView
+        android:text="@string/add_weight_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_weight="1"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:id="@+id/tvLayout"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="@string/weight"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/alertWeightTextView"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="20dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/editText"
+            android:textSize="20dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/secondaryGray"
+            android:textColor="@color/primaryYellow"
+            android:textCursorDrawable="@null"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLayout"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/addButton"
+            android:text="@string/add"
+            android:layout_weight="1"
+            android:textColor="@color/primaryGray"
+            android:background="@color/primaryYellow"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:textSize="18sp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancelButton"
+            android:text="@string/cancel"
+            android:layout_weight="1"
+            android:textColor="@color/primaryGray"
+            android:background="@android:color/white"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
