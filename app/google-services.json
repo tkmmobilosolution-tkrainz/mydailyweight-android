@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "262469372283",
+    "firebase_url": "https://weightwatcher-34b34.firebaseio.com",
+    "project_id": "weightwatcher-34b34",
+    "storage_bucket": "weightwatcher-34b34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262469372283:android:15810aa450eb5c50",
+        "android_client_info": {
+          "package_name": "watcher.weight.tkmobiledevelopment.at.mydailyweight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262469372283-7uh6etn6our2a1p4bf7ilq3el1uvrclb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWSqhjLdlp6qF_ehlR4ooUrCtvZViSRB8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
