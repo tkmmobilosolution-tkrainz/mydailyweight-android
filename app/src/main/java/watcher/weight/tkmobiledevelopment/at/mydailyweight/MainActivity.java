@@ -18,12 +18,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -44,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private String today;
 
     private InterstitialAd mInterstitialAd;
-    private AdRequest adRequest;
 
 
     @Override
@@ -52,11 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_app_id));
-
-        adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
         setAdvertisment();
 
         mInterstitialAd = new InterstitialAd(this);
@@ -244,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         String json = gson.toJson(list);
 
         editor.putString("list", json);
-        editor.commit();
+        editor.apply();
     }
 
     private ArrayList<Weight> getWeightList() {
@@ -313,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
@@ -325,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestNewInterstitial() {
 
+        AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
     }
 }
