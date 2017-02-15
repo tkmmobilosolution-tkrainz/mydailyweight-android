@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         });
         addDialogBuilder.setView(addAlertView);
         addAlertDialog = addDialogBuilder.create();
+        addAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(this);
         View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
@@ -317,10 +319,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
-        Bundle track = new Bundle();
-        track.putString(key, value);
-        analytics.logEvent(event, track);
+        if (!BuildConfig.DEBUG) {
+            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+            Bundle track = new Bundle();
+            track.putString(key, value);
+            analytics.logEvent(event, track);
+        }
     }
 
     private void requestNewInterstitial() {
