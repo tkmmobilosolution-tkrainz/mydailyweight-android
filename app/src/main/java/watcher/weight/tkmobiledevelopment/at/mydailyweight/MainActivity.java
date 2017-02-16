@@ -60,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         today = getCurrentDate();
         list = getWeightList();
-        list.add(new Weight(22, ""));
-        list.add(new Weight(22, ""));
-        list.add(new Weight(22, ""));
-        list.add(new Weight(22, ""));
+
+        if (BuildConfig.DEBUG) {
+            list.add(new Weight(22, ""));
+            list.add(new Weight(22, ""));
+            list.add(new Weight(22, ""));
+            list.add(new Weight(22, ""));
+        }
 
         weightView = (WeightView) findViewById(R.id.weightView);
         weightView.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 addAlertDialog.dismiss();
             }
         });
+
         addDialogBuilder.setView(addAlertView);
         addAlertDialog = addDialogBuilder.create();
         addAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -260,6 +264,11 @@ public class MainActivity extends AppCompatActivity {
     private void setAdvertisment() {
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+ //               .addTestDevice("D6F4C51E8F9B4BD5DD7071D66B21CF37")
+                .build();
+        mAdView.loadAd(adRequest);
+
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
@@ -306,9 +315,6 @@ public class MainActivity extends AppCompatActivity {
                 trackInteraction("Banner", "leftApp", "Banner_Left");
             }
         });
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     private void trackInteraction(String key, String value, String event) {
@@ -321,8 +327,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestNewInterstitial() {
-
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder()
+ //               .addTestDevice("D6F4C51E8F9B4BD5DD7071D66B21CF37")
+                .build();
         mInterstitialAd.loadAd(adRequest);
     }
 }
