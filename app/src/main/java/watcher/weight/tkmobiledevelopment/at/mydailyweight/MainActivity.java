@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private String today;
 
     private InterstitialAd mInterstitialAd;
-    private AdRequest adRequest;
 
 
     @Override
@@ -53,11 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_mob_app_id));
-
-        adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
+        MobileAds.initialize(getApplicationContext(), getString(R.string.ad_mob_app_id));
         setAdvertisment();
 
         mInterstitialAd = new InterstitialAd(this);
@@ -68,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         today = getCurrentDate();
         list = getWeightList();
-        list.add(new Weight(22, ""));
-        list.add(new Weight(22, ""));
-        list.add(new Weight(22, ""));
-        list.add(new Weight(22, ""));
 
         weightView = (WeightView) findViewById(R.id.weightView);
         weightView.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
@@ -121,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 addAlertDialog.dismiss();
             }
         });
+
         addDialogBuilder.setView(addAlertView);
         addAlertDialog = addDialogBuilder.create();
         addAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -246,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         String json = gson.toJson(list);
 
         editor.putString("list", json);
-        editor.commit();
+        editor.apply();
     }
 
     private ArrayList<Weight> getWeightList() {
@@ -268,6 +259,9 @@ public class MainActivity extends AppCompatActivity {
     private void setAdvertisment() {
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
@@ -314,21 +308,18 @@ public class MainActivity extends AppCompatActivity {
                 trackInteraction("Banner", "leftApp", "Banner_Left");
             }
         });
-
-        mAdView.loadAd(adRequest);
     }
 
     private void trackInteraction(String key, String value, String event) {
-        if (!BuildConfig.DEBUG) {
-            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
-            Bundle track = new Bundle();
-            track.putString(key, value);
-            analytics.logEvent(event, track);
-        }
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        Bundle track = new Bundle();
+        track.putString(key, value);
+        analytics.logEvent(event, track);
+
     }
 
     private void requestNewInterstitial() {
-
+        AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
     }
 }

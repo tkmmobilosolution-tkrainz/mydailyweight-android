@@ -21,6 +21,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-fragment-24.2.1_04a2d787c3b6f0deb17bc27f66ea470ef6087bf2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -138,6 +147,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="433f4d6aa5f21f19552afe0e6c5eff0fedba73ad">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-10.0.1_e272b8100c7fc64004f25ec1d52ae84fd0d76366/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/mydailyweight-android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -210,6 +228,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-24.2.1_e41ae5e72799e065222174523d456ae52a607280/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/mydailyweight-android/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics/10.0.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -225,6 +252,33 @@
         revision="24.0.1"
         sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
         <dex dex="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.2.1_20df1d4f793c81460992203edf2c9bba70b72080/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-24.2.1_8939776d1c4b31e24ec05094476237ac81c5f4e7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d0460bf07cc3657e0be518ca01c174493951c6b8">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-10.0.1_f7313ec9d5a16476c60e9f55ea8dba09a2aabf1b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_bdbbd03aa7827cd32e9281cf9c109e147fbbbab8/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -255,12 +309,48 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.2.1_c96f27d4324c3e960ad928b5449d818e91723c61/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.1"
         sha1="867dad63c33388ff8c7644b236579355036d075f">
         <dex dex="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_dd1128affadeb1d1fa4768fa5c654b72c6cff3d6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_e2c94eef22fcff10f82b8806645e8018837f0a09/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.firebase/firebase-common/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="eb0d830e3eabb9deb9ec44869cf7ac7ea1ad794c">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-common-10.0.1_c84b0a29b87687435b49bf247333e4c61b2f3420/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_696cef39e5cc5dd150e436c78ab462fe92258283/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -300,12 +390,30 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.firebase/firebase-iid/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="486371f97baad8e607f332f20fee1d3dd00a731a">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-iid-10.0.1_6dd83910105e0fba286cca15e7b6299581ede8bc/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/mydailyweight-android/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.1"
         sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
         <dex dex="/Users/tkrainz/mydailyweight-android/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_985bef06cdf3daebaf80006a6d7ec7389413b1ad/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-24.2.1_19b0772db915e73b4e45050ee5e567624b5577c4/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -369,6 +477,15 @@
         revision="24.0.1"
         sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
         <dex dex="/Users/tkrainz/mydailyweight-android/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_840657022f6893537c723fafa3dbb5152e1f07e2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_fa81b6ca4b7921d94c871cedcaa60db36be4845f/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -444,6 +561,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-24.2.1_ef24b04d77159a8d9df81610b7b7991c99cfb8a3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -480,6 +606,33 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads-lite/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="b955cb3a1ad6f1b6ff728ce1e0cd592c1717b440">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-lite-10.0.1_33f5a7a18a074a1a4c6e0ecd92c87a2284477a63/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_2aa0a2c0e4638de81073be47a158360527311a05/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_4f2063b671e6284c0c23cb5fe4417085990812c0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -507,12 +660,39 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.2.1_917ac0b958fd6d463fd563d1b4615e32224b168a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="25438f55fc6d906a0e72f30b21487541430ede43">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-10.0.1_e8573b63919d2b4c8786d09dbede4b0c0bbc889a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.1"
         sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
         <dex dex="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e41b8cfaca786b3daf4200eca3302237bfe12958/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_89ef8edfb329ac50c609f871cefe23c0fdfeb2aa/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -588,6 +768,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="6116e0e7069de7fc259aac8e08b84f32c2038231">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.firebase-firebase-analytics-impl-10.0.1_22efa60aebe685ea54ac48c9e8235d4a6a515c3d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/MyDailyWeight/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
@@ -648,6 +837,15 @@
         revision="24.0.1"
         sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
         <dex dex="/Users/tkrainz/Documents/MyDailyWeight/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-24.2.1_cd084d5866fc6efd440cfa70c834e9dcf8487a3c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="c3c2fd3df6fecab705722346e2cf52778ca5009f">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_779e209cc4395989e153fda997bd81c31ea50f28/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -723,6 +921,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-clearcut/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="1d193729baf37df3d902a423291423a0df7e3779">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-clearcut-10.0.1_bcea1b63bfcad6c5f4fe1d5c188a392af01fa2db/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/Projects/WeightWatcher/app/build/intermediates/exploded-aar/com.google.firebase/firebase-analytics-impl/10.0.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -741,12 +948,48 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="756f6297eef79784f5e356dcd4f39865028b2bd0">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.1_02cab2b13b5dcd9058a95d8e8ab6466ef4d3221a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-24.2.1_f71ccb2ec9ce6ee954982f4b1928c71c06000863/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="646ec0c1bdbcbd76950baabfd958e2d5ef9b0aa4">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_da803b3377f5528fe500cba30730349fb672ba5e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/tkrainz/Documents/MyDailyWeight/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.1"
         sha1="d5c731fc64c03dfe04d51134955b483551c35849">
         <dex dex="/Users/tkrainz/Documents/MyDailyWeight/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.2.1_a9f9b1df6877e20e1627afe983ee47f880d8ba24/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gass/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.1"
+        sha1="57c2eceb8548de84509d1ebc293fedec53231f6c">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gass-10.0.1_21cb2f18ded6e7a00140663559f474857741626a/classes.dex" />
     </item>
     <item
         is-multidex="true"
