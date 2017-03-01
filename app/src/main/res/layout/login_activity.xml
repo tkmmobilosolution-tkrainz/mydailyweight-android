@@ -12,10 +12,12 @@
         android:layout_gravity="center"
         android:textAlignment="center"
         android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:background="@color/primaryGray"
         android:textColor="@color/primaryYellow"
         android:textSize="16dp"
-        android:id="@+id/welcomeView" />
+        android:id="@+id/welcomeLoginView" />
 
     <EditText
         android:layout_width="match_parent"
