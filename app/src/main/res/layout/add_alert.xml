@@ -41,7 +41,7 @@
             android:text=""
             android:ems="10"
             android:id="@+id/editText"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:focusable="true"

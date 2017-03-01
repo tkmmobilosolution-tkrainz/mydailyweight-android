@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryGray"
+    android:weightSum="1">
+
+    <TextView
+        android:text="Welcome to MyDailyWeight.\n\nLogin and start your weight tracking."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"
+        android:background="@color/primaryGray"
+        android:textColor="@color/primaryYellow"
+        android:textSize="16dp"
+        android:id="@+id/welcomeView" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:inputType="textEmailAddress"
+        android:background="@color/white"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="20dp"
+        android:hint="Email"
+        android:id="@+id/loginEmail" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:inputType="textPassword"
+        android:background="@color/white"
+        android:textSize="20dp"
+        android:hint="Password"
+        android:id="@+id/loginPassword" />
+
+    <Button
+        android:text="Login"
+        android:layout_width="175dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@color/primaryYellow"
+        android:textColor="@color/primaryGray"
+        android:textSize="18dp"
+        android:id="@+id/loginButton" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebookButton"
+        android:layout_width="175dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="13dp"
+        android:textAlignment="center"/>
+
+    <Button
+        android:text="No Account? Register now"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@color/primaryGray"
+        android:textColor="@color/primaryYellow"
+        android:textSize="14dp"
+        android:id="@+id/registerButton" />
+
+</LinearLayout>
