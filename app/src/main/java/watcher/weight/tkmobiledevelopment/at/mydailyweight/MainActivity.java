@@ -1,5 +1,6 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,6 +9,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +21,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         today = getCurrentDate();
         list = getWeightList();
+
 
         weightView = (WeightView) findViewById(R.id.weightView);
         weightView.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
@@ -135,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuItem menuItem_Info = menu.add(0, R.id.menuid_add, 0, "").setIcon(android.R.drawable.ic_menu_edit);
+        MenuItem menuItem_user = menu.add(1, R.id.menuid_user, 1, "").setIcon(android.R.drawable.ic_menu_more);
         MenuItemCompat.setShowAsAction(menuItem_Info,
+                MenuItem.SHOW_AS_ACTION_IF_ROOM|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        MenuItemCompat.setShowAsAction(menuItem_user,
                 MenuItem.SHOW_AS_ACTION_IF_ROOM|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         return super.onCreateOptionsMenu(menu);
     }
@@ -145,7 +153,10 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menuid_add) {
             trackInteraction("Menu", "Add", "Click_Add_Menu");
             showAddDialog();
+        } else if (item.getItemId() == R.id.menuid_user) {
+            logout();
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -321,5 +332,18 @@ public class MainActivity extends AppCompatActivity {
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("USER", null);
+        editor.apply();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
