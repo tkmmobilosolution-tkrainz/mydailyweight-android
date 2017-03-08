@@ -1,10 +1,15 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -25,11 +31,13 @@ import java.util.ArrayList;
  * Created by tkrainz on 04/03/2017.
  */
 
-public class UserActivity extends Activity {
+public class UserActivity extends AppCompatActivity {
 
     String gender = "";
     ArrayList<String> genderList = new ArrayList<>();
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private AlertDialog hintAlertDialog;
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,31 @@ public class UserActivity extends Activity {
 
         final EditText name = (EditText) findViewById(R.id.userNameEditText);
         final EditText age = (EditText) findViewById(R.id.userAgeEditText);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        final AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(UserActivity.this);
+        final View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
+        final TextView hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
+        final TextView hintMessageView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
+        final Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
+
+        progressDialog = new ProgressDialog(this, R.style.SpinnerTheme);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        progressDialog.setMessage("Updateing Profile");
+
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hintAlertDialog.dismiss();
+            }
+        });
+
+        hintTitleView.setText("Hint");
+
+        dialogHintBuilder.setView(hintAlertView);
+        hintAlertDialog.setCancelable(false);
+        hintAlertDialog = dialogHintBuilder.create();
 
         Spinner genderSpinner = (Spinner) findViewById(R.id.spinnerGender);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
@@ -73,6 +106,7 @@ public class UserActivity extends Activity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.show();
                 String userName = name.getText().toString();
                 String userAge = age.getText().toString();
                 String userHeight = height.getText().toString();
@@ -80,27 +114,27 @@ public class UserActivity extends Activity {
                 String userDreamWeight = dreamWeight.getText().toString();
 
                 if (!isStringAvailable(userName)) {
-                    name.setText("No username entered.");
+                    hintMessageView.setText("No username entered.");
                     return;
                 }
 
                 if (!isStringAvailable(userAge)) {
-                    name.setText("No username entered.");
+                    hintMessageView.setText("No age entered.");
                     return;
                 }
 
                 if (!isStringAvailable(userHeight)) {
-                    name.setText("No username entered.");
+                    hintMessageView.setText("No height entered.");
                     return;
                 }
 
                 if (!isStringAvailable(userCurrentWeight)) {
-                    name.setText("No username entered.");
+                    hintMessageView.setText("No current weight entered.");
                     return;
                 }
 
                 if (!isStringAvailable(userDreamWeight)) {
-                    name.setText("No username entered.");
+                    hintMessageView.setText("No dream weight entered.");
                     return;
                 }
 
@@ -122,6 +156,8 @@ public class UserActivity extends Activity {
 
                 saveUser(newUser);
 
+                progressDialog.hide();
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -133,7 +169,7 @@ public class UserActivity extends Activity {
     }
 
     private void saveUser(User user) {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("USER", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(user);

@@ -20,15 +20,6 @@
         android:textSize="16dp"
         android:id="@+id/welcomeRegisterView" />
 
-    <TextView
-        android:text="Wrong email format"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textColor="@android:color/holo_red_dark"
-        android:id="@+id/registerWrongEmail" />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="32dp"
@@ -40,15 +31,6 @@
         android:textSize="20dp"
         android:hint="Email"
         android:id="@+id/registerEmail" />
-
-    <TextView
-        android:text="Minimum character count is 8."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textColor="@android:color/white"
-        android:id="@+id/passwordInfo" />
 
     <EditText
         android:layout_width="match_parent"
@@ -62,14 +44,6 @@
         android:hint="Password"
         android:id="@+id/registerPassword" />
 
-    <TextView
-        android:text="Passwords do not match"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:textColor="@android:color/holo_red_dark"
-        android:id="@+id/registerWrongPassword" />
 
     <EditText
         android:layout_width="match_parent"

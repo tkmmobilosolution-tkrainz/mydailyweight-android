@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryGray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:id="@+id/tvLayout"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="Logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:id="@+id/logoutHintTitle"
+            android:textSize="26dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
+
+        <TextView
+            android:text="Are you sure you want logout current user?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:id="@+id/logoutHintMessage"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLayout"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="15dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logoutHintButton"
+            android:text="Logout"
+            android:layout_weight="1"
+            android:textColor="@color/primaryGray"
+            android:background="@color/primaryYellow"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:textSize="18sp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancelHintButton"
+            android:text="@string/cancel"
+            android:layout_weight="1"
+            android:textColor="@color/primaryGray"
+            android:background="@android:color/white"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

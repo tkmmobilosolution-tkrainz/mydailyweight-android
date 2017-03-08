@@ -1,5 +1,6 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog addAlertDialog;
     private AlertDialog hintAlertDialog;
+    private AlertDialog logoutAlertDialog;
 
     private ArrayList<Weight> list = new ArrayList<>();
     private ListView listView;
@@ -118,11 +121,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         addDialogBuilder.setView(addAlertView);
+        addAlertDialog.setCancelable(false);
         addAlertDialog = addDialogBuilder.create();
         addAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(this);
         View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
+
+        TextView hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
+        TextView hintMessageView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
 
         Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
         hintButton.setOnClickListener(new View.OnClickListener() {
@@ -133,31 +140,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        hintTitleView.setText("Hint");
+        hintMessageView.setText(getString(R.string.add_hint));
+
         dialogHintBuilder.setView(hintAlertView);
+        hintAlertDialog.setCancelable(false);
         hintAlertDialog = dialogHintBuilder.create();
+
+        final AlertDialog.Builder logoutHintBuilder = new AlertDialog.Builder(this);
+        View logoutHintView = inflater.inflate(R.layout.logout_hint, null);
+        Button cancelLogoutButton = (Button) logoutHintView.findViewById(R.id.cancelHintButton);
+        cancelLogoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoutAlertDialog.dismiss();
+            }
+        });
+
+        Button logoutButton = (Button) logoutHintView.findViewById(R.id.logoutHintButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
+        logoutHintBuilder.setView(logoutHintView);
+        logoutAlertDialog.setCancelable(false);
+        logoutAlertDialog = logoutHintBuilder.create();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem menuItem_Info = menu.add(0, R.id.menuid_add, 0, "").setIcon(android.R.drawable.ic_menu_edit);
-        MenuItem menuItem_user = menu.add(1, R.id.menuid_user, 1, "").setIcon(android.R.drawable.ic_menu_more);
-        MenuItemCompat.setShowAsAction(menuItem_Info,
-                MenuItem.SHOW_AS_ACTION_IF_ROOM|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        MenuItemCompat.setShowAsAction(menuItem_user,
-                MenuItem.SHOW_AS_ACTION_IF_ROOM|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menuid_add) {
-            trackInteraction("Menu", "Add", "Click_Add_Menu");
-            showAddDialog();
-        } else if (item.getItemId() == R.id.menuid_user) {
-            logout();
+        switch (item.getItemId()) {
+            case R.id.menuAdd:
+                trackInteraction("Menu", "Add", "Click_Add_Menu");
+                showAddDialog();
+                return true;
+            case R.id.sync:
+                return true;
+            case R.id.logout:
+                logoutAlertDialog.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void refreshLayout(ArrayList<Weight> list) {
@@ -338,9 +371,9 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
 
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("USER", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("USER", null);
+        editor.remove("USER");
         editor.apply();
 
         Intent intent = new Intent(this, LoginActivity.class);
