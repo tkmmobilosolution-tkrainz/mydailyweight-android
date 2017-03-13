@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog hintAlertDialog;
     private AlertDialog logoutAlertDialog;
     private AlertDialog downloadAlertDialog;
+    private AlertDialog hintNetworkAlert;
 
     private TextView hintTitleView, hintMessageView;
 
@@ -168,10 +171,10 @@ public class MainActivity extends AppCompatActivity {
                 User savedUser = gson.fromJson(pref.getString("USER", null), User.class);
                 double differenceSinceBegin = Double.parseDouble(savedUser.getCurrentWeight()) - list.get(list.size() - 1).weightValue;
                 double differenceToDream = Double.parseDouble(savedUser.getDreamWeight()) - list.get(list.size() - 1).weightValue;
-                String hintText = getString(R.string.main_diff_sinde_begin) + Math.abs(differenceSinceBegin) + " kg" + "\n\n" +
-                        getString(R.string.main_till_end) + Math.abs(differenceToDream) + " kg";
+                String hintText = getString(R.string.main_diff_sinde_begin) + String.format("%.2f", Math.abs(differenceSinceBegin)) + " kg" + "\n\n" +
+                        getString(R.string.main_till_end) + String.format("%.2f", Math.abs(differenceToDream)) + " kg";
 
-                showHintAlertDialog("Weight Information", hintText);
+                showHintAlertDialog(getString(R.string.main_weight_information), hintText);
             }
         });
 
@@ -317,6 +320,29 @@ public class MainActivity extends AppCompatActivity {
 
         downloadHintBuilder.setView(downloadHintView);
         downloadAlertDialog = downloadHintBuilder.create();
+
+        final AlertDialog.Builder dialogNetworkBuilder = new AlertDialog.Builder(MainActivity.this);
+        final View hintNetworkView = inflater.inflate(R.layout.hint_alert, null);
+        final TextView networkTitleView = (TextView) hintNetworkView.findViewById(R.id.hintTitleTextView);
+        final TextView networkView = (TextView) hintNetworkView.findViewById(R.id.hintMessageTextView);
+        final Button networkButton = (Button) hintNetworkView.findViewById(R.id.hintButton);
+        networkButton.setText(getString(R.string.try_again));
+        networkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_tray_again");
+                hintAlertDialog.dismiss();
+                if (!isOnline()) {
+                    hintNetworkAlert.show();
+                }
+            }
+        });
+
+        networkTitleView.setText(getString(R.string.hint));
+        networkView.setText(getString(R.string.no_connection));
+
+        dialogHintBuilder.setView(hintNetworkView);
+        hintNetworkAlert = dialogNetworkBuilder.create();
     }
 
     @Override
@@ -334,72 +360,84 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.sync:
                 trackInteraction("Main", "Menu", "main_menu_sync");
-                progressDialog.setMessage(getString(R.string.progressbar_sync));
-                progressDialog.show();
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                if (isOnline()) {
+                    progressDialog.setMessage(getString(R.string.progressbar_sync));
+                    progressDialog.show();
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-                if (prefs.getBoolean("able_sync", false)) {
-                    trackInteraction("Main", "Sync", "main_sync_start");
-                    rewardedAd.show();
+                    if (prefs.getBoolean("able_sync", false)) {
+                        trackInteraction("Main", "Sync", "main_sync_start");
+                        rewardedAd.show();
+                    } else {
+                        trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
+                        showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_sync));
+                    }
+                    progressDialog.hide();
                 } else {
-                    trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
-                    showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_sync));
+                    hintNetworkAlert.show();
                 }
-                progressDialog.hide();
                 return true;
             case R.id.download:
                 trackInteraction("Main", "Menu", "main_menu_download");
-                progressDialog.setMessage(getString(R.string.progressbar_loading));
-                progressDialog.show();
-                final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                database.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        GenericTypeIndicator<ArrayList<Weight>> arrayList = new GenericTypeIndicator<ArrayList<Weight>>() {};
-                        dbList = dataSnapshot.getValue(arrayList);
+                if (isOnline()) {
+                    progressDialog.setMessage(getString(R.string.progressbar_loading));
+                    progressDialog.show();
+                    final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    database.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            GenericTypeIndicator<ArrayList<Weight>> arrayList = new GenericTypeIndicator<ArrayList<Weight>>() {};
+                            dbList = dataSnapshot.getValue(arrayList);
 
-                        if (dbList != null) {
+                            if (dbList != null) {
 
-                            if (list.size() > dbList.size()) {
-                                trackInteraction("Main", "Download", "main_download_overwrite");
-                                downloadAlertDialog.show();
-                            } else if (dbList.size() == list.size()){
-                                trackInteraction("Main", "Download", "main_download_up_to_date");
+                                if (list.size() > dbList.size()) {
+                                    trackInteraction("Main", "Download", "main_download_overwrite");
+                                    downloadAlertDialog.show();
+                                } else if (dbList.size() == list.size()){
+                                    trackInteraction("Main", "Download", "main_download_up_to_date");
+                                    showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_download));
+                                } else  {
+                                    trackInteraction("Main", "Download", "main_download_success");
+                                    list = dbList;
+                                    refreshLayout(list);
+                                }
+                            }  else {
+                                trackInteraction("Main", "Download", "main_download_no_data_available");
                                 showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_download));
-                            } else  {
-                                trackInteraction("Main", "Download", "main_download_success");
-                                list = dbList;
-                                refreshLayout(list);
                             }
-                        }  else {
-                            trackInteraction("Main", "Download", "main_download_no_data_available");
-                            showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_download));
+
+                            progressDialog.hide();
                         }
 
-                        progressDialog.hide();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        //showHintAlertDialog("Error", "A server error occored. Try again later.");
-                        trackInteraction("Main", "Download", "main_download_error");
-                        progressDialog.hide();
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //showHintAlertDialog("Error", "A server error occored. Try again later.");
+                            trackInteraction("Main", "Download", "main_download_error");
+                            progressDialog.hide();
+                        }
+                    });
+                } else {
+                    hintNetworkAlert.show();
+                }
                 return true;
             case R.id.logout:
                 trackInteraction("Main", "Menu", "main_menu_logout");
-                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("able_sync", false)) {
-                    trackInteraction("Main", "Logout", "main_logout_sync");
-                    logoutButton.setText(getString(R.string.logout));
-                    hintLogoutMessage.setText(getString(R.string.main_logout_sync));
-                } else {
-                    trackInteraction("Main", "Logout", "main_logout");
-                    logoutButton.setText(getString(R.string.logout));
-                    hintLogoutMessage.setText(getString(R.string.main_logout_no_sync));
-                }
+                if (isOnline()) {
+                    if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("able_sync", false)) {
+                        trackInteraction("Main", "Logout", "main_logout_sync");
+                        logoutButton.setText(getString(R.string.logout));
+                        hintLogoutMessage.setText(getString(R.string.main_logout_sync));
+                    } else {
+                        trackInteraction("Main", "Logout", "main_logout");
+                        logoutButton.setText(getString(R.string.logout));
+                        hintLogoutMessage.setText(getString(R.string.main_logout_no_sync));
+                    }
 
-                logoutAlertDialog.show();
+                    logoutAlertDialog.show();
+                } else {
+                    hintNetworkAlert.show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -649,5 +687,13 @@ public class MainActivity extends AppCompatActivity {
         hintTitleView.setText(title);
         hintMessageView.setText(message);
         hintAlertDialog.show();
+    }
+
+    public boolean isOnline() {
+        trackInteraction("Main", "User", "main_check_network_connection");
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

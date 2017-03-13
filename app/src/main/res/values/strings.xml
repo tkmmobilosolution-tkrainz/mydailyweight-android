@@ -58,6 +58,7 @@
     <string name="main_logout_sync">There are some entries to sychronise before logout. When you logout the synchronization also will be done.</string>
     <string name="main_logout_no_sync">Are you sure you want to logout?</string>
     <string name="main_nothing_sync">There is no data to synchronize.</string>
+    <string name="main_weight_information">Weight Information</string>
 
     <string name="user_welcome">Please entere here your personal details for your profile.</string>
     <string name="user_button_update">Update profile</string>

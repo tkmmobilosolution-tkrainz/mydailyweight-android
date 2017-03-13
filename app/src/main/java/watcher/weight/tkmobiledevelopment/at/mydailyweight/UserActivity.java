@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -38,7 +40,7 @@ public class UserActivity extends AppCompatActivity {
     String gender = "";
     ArrayList<String> genderList = new ArrayList<>();
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    private AlertDialog hintAlertDialog;
+    private AlertDialog hintAlertDialog, hintNetworkAlert;
     private ProgressDialog progressDialog = null;
 
     @Override
@@ -108,78 +110,105 @@ public class UserActivity extends AppCompatActivity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
-                String userName = name.getText().toString();
-                String userAge = age.getText().toString();
-                String userHeight = height.getText().toString();
-                String userCurrentWeight = weight.getText().toString();
-                String userDreamWeight = dreamWeight.getText().toString();
+                if (isOnline()) {
+                    progressDialog.show();
+                    String userName = name.getText().toString();
+                    String userAge = age.getText().toString();
+                    String userHeight = height.getText().toString();
+                    String userCurrentWeight = weight.getText().toString();
+                    String userDreamWeight = dreamWeight.getText().toString();
 
-                if (!isStringAvailable(userName)) {
-                    trackInteraction("User", "Hint", "user_no_username");
-                    hintMessageView.setText(getString(R.string.user_no_nickname));
-                    hintAlertDialog.show();
-                    return;
+                    if (!isStringAvailable(userName)) {
+                        trackInteraction("User", "Hint", "user_no_username");
+                        hintMessageView.setText(getString(R.string.user_no_nickname));
+                        hintAlertDialog.show();
+                        return;
+                    }
+
+                    if (!isStringAvailable(userAge)) {
+                        trackInteraction("User", "Hint", "user_no_age");
+                        hintMessageView.setText(getString(R.string.user_no_age));
+                        hintAlertDialog.show();
+                        return;
+                    }
+
+                    if (!isStringAvailable(userHeight)) {
+                        trackInteraction("User", "Hint", "user_no_height");
+                        hintMessageView.setText(getString(R.string.user_no_height));
+                        hintAlertDialog.show();
+                        return;
+                    }
+
+                    if (!isStringAvailable(userCurrentWeight)) {
+                        trackInteraction("User", "Hint", "user_no_current_weight");
+                        hintMessageView.setText(getString(R.string.user_no_current_weight));
+                        hintAlertDialog.show();
+                        return;
+                    }
+
+                    if (!isStringAvailable(userDreamWeight)) {
+                        trackInteraction("User", "Hint", "user_no_dream_weight");
+                        hintMessageView.setText(getString(R.string.user_no_dream_weight));
+                        hintAlertDialog.show();
+                        return;
+                    }
+
+                    FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getApplicationContext());
+
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("name").setValue(userName);
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("age").setValue(userAge);
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("gender").setValue(gender);
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("height").setValue(userHeight);
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("currentWeight").setValue(userCurrentWeight);
+                    mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("dreamWeight").setValue(userDreamWeight);
+
+                    analytics.setUserProperty("age", userAge);
+                    analytics.setUserProperty("gender", gender);
+
+                    User newUser = new User();
+                    newUser.setName(userName);
+                    newUser.setAge(userAge);
+                    newUser.setHeight(userHeight);
+                    newUser.setCurrentWeight(userCurrentWeight);
+                    newUser.setDreamWeight(userDreamWeight);
+                    newUser.setGender(gender);
+
+                    saveUser(newUser);
+
+                    progressDialog.hide();
+
+                    trackInteraction("User", "Intent", "user_open_main");
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    hintNetworkAlert.show();
                 }
-
-                if (!isStringAvailable(userAge)) {
-                    trackInteraction("User", "Hint", "user_no_age");
-                    hintMessageView.setText(getString(R.string.user_no_age));
-                    hintAlertDialog.show();
-                    return;
-                }
-
-                if (!isStringAvailable(userHeight)) {
-                    trackInteraction("User", "Hint", "user_no_height");
-                    hintMessageView.setText(getString(R.string.user_no_height));
-                    hintAlertDialog.show();
-                    return;
-                }
-
-                if (!isStringAvailable(userCurrentWeight)) {
-                    trackInteraction("User", "Hint", "user_no_current_weight");
-                    hintMessageView.setText(getString(R.string.user_no_current_weight));
-                    hintAlertDialog.show();
-                    return;
-                }
-
-                if (!isStringAvailable(userDreamWeight)) {
-                    trackInteraction("User", "Hint", "user_no_dream_weight");
-                    hintMessageView.setText(getString(R.string.user_no_dream_weight));
-                    hintAlertDialog.show();
-                    return;
-                }
-
-                FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getApplicationContext());
-
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("name").setValue(userName);
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("age").setValue(userAge);
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("gender").setValue(gender);
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("height").setValue(userHeight);
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("currentWeight").setValue(userCurrentWeight);
-                mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("dreamWeight").setValue(userDreamWeight);
-
-                analytics.setUserProperty("age", userAge);
-                analytics.setUserProperty("gender", gender);
-
-                User newUser = new User();
-                newUser.setName(userName);
-                newUser.setAge(userAge);
-                newUser.setHeight(userHeight);
-                newUser.setCurrentWeight(userCurrentWeight);
-                newUser.setDreamWeight(userDreamWeight);
-                newUser.setGender(gender);
-
-                saveUser(newUser);
-
-                progressDialog.hide();
-
-                trackInteraction("User", "Intent", "user_open_main");
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
             }
         });
+
+        final AlertDialog.Builder dialogNetworkBuilder = new AlertDialog.Builder(UserActivity.this);
+        final View hintNetworkView = inflater.inflate(R.layout.hint_alert, null);
+        final TextView networkTitleView = (TextView) hintNetworkView.findViewById(R.id.hintTitleTextView);
+        final TextView networkView = (TextView) hintNetworkView.findViewById(R.id.hintMessageTextView);
+        final Button networkButton = (Button) hintNetworkView.findViewById(R.id.hintButton);
+        networkButton.setText(getString(R.string.try_again));
+        networkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("User", "Button", "user_tray_again");
+                hintAlertDialog.dismiss();
+                if (!isOnline()) {
+                    hintNetworkAlert.show();
+                }
+            }
+        });
+
+        networkTitleView.setText(getString(R.string.hint));
+        networkView.setText(getString(R.string.no_connection));
+
+        dialogHintBuilder.setView(hintNetworkView);
+        hintNetworkAlert = dialogNetworkBuilder.create();
     }
 
     private boolean isStringAvailable(String checkString) {
@@ -200,5 +229,13 @@ public class UserActivity extends AppCompatActivity {
         Bundle track = new Bundle();
         track.putString(key, value);
         analytics.logEvent(event, track);
+    }
+
+    public boolean isOnline() {
+        trackInteraction("User", "User", "user_check_network_connection");
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

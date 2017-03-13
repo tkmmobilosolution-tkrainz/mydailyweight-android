@@ -1,8 +1,11 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -45,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth authentication = FirebaseAuth.getInstance();
     FirebaseAuth.AuthStateListener authListener = null;
     CallbackManager mCallbackManager = null;
-    private AlertDialog hintAlertDialog;
+    private AlertDialog hintAlertDialog, hintNetworkAlert;
     private ProgressDialog progressDialog = null;
     private TextView hintTitleView, hintMessageView;
     private EditText emailET, passwordET;
@@ -97,7 +100,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 trackInteraction("Login", "Button", "login_clicked_sign_in");
-                loginAction();
+                if (isOnline()) {
+                    loginAction();
+                } else {
+                    hintNetworkAlert.show();
+                }
             }
         });
 
@@ -105,7 +112,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 trackInteraction("Login", "Button", "login_clicked_facebook");
-                progressDialog.show();
+                if (isOnline()) {
+                    progressDialog.show();
+                } else {
+                    hintNetworkAlert.show();
+                }
             }
         });
 
@@ -129,9 +140,36 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 trackInteraction("Login", "Button", "login_clicked_register");
-                showRegisterActivity();
+                if (isOnline()) {
+                    showRegisterActivity();
+                } else {
+                    hintNetworkAlert.show();
+                }
             }
         });
+
+        final AlertDialog.Builder dialogNetworkBuilder = new AlertDialog.Builder(LoginActivity.this);
+        final View hintNetworkView = inflater.inflate(R.layout.hint_alert, null);
+        final TextView networkTitleView = (TextView) hintNetworkView.findViewById(R.id.hintTitleTextView);
+        final TextView networkView = (TextView) hintNetworkView.findViewById(R.id.hintMessageTextView);
+        final Button networkButton = (Button) hintNetworkView.findViewById(R.id.hintButton);
+        networkButton.setText(getString(R.string.try_again));
+        networkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Login", "Button", "login_tray_again");
+                hintAlertDialog.dismiss();
+                if (!isOnline()) {
+                    hintNetworkAlert.show();
+                }
+            }
+        });
+
+        networkTitleView.setText(getString(R.string.hint));
+        networkView.setText(getString(R.string.no_connection));
+
+        dialogHintBuilder.setView(hintNetworkView);
+        hintNetworkAlert = dialogNetworkBuilder.create();
     }
 
     @Override
@@ -314,5 +352,13 @@ public class LoginActivity extends AppCompatActivity {
 
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public boolean isOnline() {
+        trackInteraction("Login", "User", "login_check_network_connection");
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

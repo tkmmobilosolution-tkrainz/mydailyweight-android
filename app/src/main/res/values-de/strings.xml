@@ -59,6 +59,7 @@
     <string name="main_logout_sync">Bevor du dich abmeldest müssen deine Einträge synchronisiert werden. Wenn du dich abmeldest werden diese automatisch synchronisiert.</string>
     <string name="main_logout_no_sync">Bist du dir sicher, dass du dich abmelden willst?</string>
     <string name="main_nothing_sync">Es gibt keine Daten zum Synchronisieren.</string>
+    <string name="main_weight_information">Gewichts Information</string>
 
     <string name="user_welcome">Gib hier bitte deine persöhnlichen Informationen für dein Profil an.</string>
     <string name="user_button_update">Aktualisiere Profil</string>
