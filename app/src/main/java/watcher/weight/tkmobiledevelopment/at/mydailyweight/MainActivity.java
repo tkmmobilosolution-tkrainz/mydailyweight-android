@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!rewardedFinished) {
                     trackInteraction("Main", "Rewarded", "main_sync_canceled");
                     loadRewardedVideo();
-                    Toast.makeText(MainActivity.this, "Sync faild. Watch video till the end.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.main_sync_failed), Toast.LENGTH_SHORT).show();
                 }
 
                 rewardedFinished = false;
@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
                 User savedUser = gson.fromJson(pref.getString("USER", null), User.class);
                 double differenceSinceBegin = Double.parseDouble(savedUser.getCurrentWeight()) - list.get(list.size() - 1).weightValue;
                 double differenceToDream = Double.parseDouble(savedUser.getDreamWeight()) - list.get(list.size() - 1).weightValue;
-                String hintText = "Difference since Begin: " + Math.abs(differenceSinceBegin) + " kg" + "\n\n" +
-                        "Difference to dream weight: " + Math.abs(differenceToDream) + " kg";
+                String hintText = getString(R.string.main_diff_sinde_begin) + Math.abs(differenceSinceBegin) + " kg" + "\n\n" +
+                        getString(R.string.main_till_end) + Math.abs(differenceToDream) + " kg";
 
                 showHintAlertDialog("Weight Information", hintText);
             }
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     trackInteraction("Main", "Button", "main_add_hint_button_failed");
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_weight_entered), Toast.LENGTH_LONG).show();
                 } else {
-                    progressDialog.setMessage("Refresh");
+                    progressDialog.setMessage(getString(R.string.progressbar_refresh));
                     progressDialog.show();
                     trackInteraction("Main", "Button", "main_add_hint_button_success");
                     double weight = Double.parseDouble(newWeight.getText().toString());
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog.Builder downloadHintBuilder = new AlertDialog.Builder(this);
         View downloadHintView = inflater.inflate(R.layout.logout_hint, null);
         TextView downloadMessageView = (TextView) downloadHintView.findViewById(R.id.logoutHintMessage);
-        downloadMessageView.setText("If you are downloading sync data, you will loose some entries.");
+        downloadMessageView.setText(getString(R.string.main_download_loose_data));
         Button cancelDownloadButton = (Button) downloadHintView.findViewById(R.id.cancelHintButton);
         cancelDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button downloadButton = (Button) downloadHintView.findViewById(R.id.logoutHintButton);
-        downloadButton.setText("Download anyway");
+        downloadButton.setText(getString(R.string.main_download_anyway));
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.sync:
                 trackInteraction("Main", "Menu", "main_menu_sync");
-                progressDialog.setMessage("Logging in");
+                progressDialog.setMessage(getString(R.string.progressbar_sync));
                 progressDialog.show();
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -343,13 +343,13 @@ public class MainActivity extends AppCompatActivity {
                     rewardedAd.show();
                 } else {
                     trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
-                    showHintAlertDialog("Hint", "Nothing to sync. Up to date.");
+                    showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_sync));
                 }
                 progressDialog.hide();
                 return true;
             case R.id.download:
                 trackInteraction("Main", "Menu", "main_menu_download");
-                progressDialog.setMessage("Loading Data");
+                progressDialog.setMessage(getString(R.string.progressbar_loading));
                 progressDialog.show();
                 final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 database.addValueEventListener(new ValueEventListener() {
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
                                 downloadAlertDialog.show();
                             } else if (dbList.size() == list.size()){
                                 trackInteraction("Main", "Download", "main_download_up_to_date");
-                                showHintAlertDialog("Hint", "No data available to download.");
+                                showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_download));
                             } else  {
                                 trackInteraction("Main", "Download", "main_download_success");
                                 list = dbList;
@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }  else {
                             trackInteraction("Main", "Download", "main_download_no_data_available");
-                            showHintAlertDialog("Hint", "No data available to download.");
+                            showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_download));
                         }
 
                         progressDialog.hide();
@@ -391,12 +391,12 @@ public class MainActivity extends AppCompatActivity {
                 trackInteraction("Main", "Menu", "main_menu_logout");
                 if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("able_sync", false)) {
                     trackInteraction("Main", "Logout", "main_logout_sync");
-                    logoutButton.setText("Sync & Logout");
-                    hintLogoutMessage.setText("Some entries are not sync. When logout you will sync your data. Otherwise you will loose some data.");
+                    logoutButton.setText(getString(R.string.logout));
+                    hintLogoutMessage.setText(getString(R.string.main_logout_sync));
                 } else {
                     trackInteraction("Main", "Logout", "main_logout");
-                    logoutButton.setText("Logout");
-                    hintLogoutMessage.setText("Are you sure you want logout current user?");
+                    logoutButton.setText(getString(R.string.logout));
+                    hintLogoutMessage.setText(getString(R.string.main_logout_no_sync));
                 }
 
                 logoutAlertDialog.show();
@@ -480,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
             addAlertDialog.show();
         } else if (list.get(list.size() - 1).date.equals(today)) {
             trackInteraction("Main", "Add", "main_weight_tomorrow");
-            showHintAlertDialog("Hint", getString(R.string.add_hint));
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.add_hint));
         } else {
             trackInteraction("Main", "Add", "main_weight_more");
             addAlertDialog.show();
@@ -631,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void syncDatabase() {
-        progressDialog.setMessage("Sync");
+        progressDialog.setMessage(getString(R.string.progressbar_sync));
         progressDialog.show();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mDatabase.child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(list);

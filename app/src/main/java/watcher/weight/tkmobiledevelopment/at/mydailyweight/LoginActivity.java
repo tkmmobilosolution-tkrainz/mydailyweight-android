@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this, R.style.SpinnerTheme);
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        progressDialog.setMessage("Logging in");
+        progressDialog.setMessage(getString(R.string.progressbar_sign_in));
 
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -194,10 +194,10 @@ public class LoginActivity extends AppCompatActivity {
             });
         } else if (!emailFormat(email)) {
             trackInteraction("Login", "Hint", "login_email_format");
-            showHintAlertDialog("Hint", "Check your email address, wrong format");
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.email_worng_format));
         } else if (!passwordFormat(password)) {
             trackInteraction("Login", "Hint", "login_password_format");
-            showHintAlertDialog("Hint", "Password lenght must be 8 characters or longer.");
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.password_worng_format));
         }
     }
 
@@ -239,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                showHintAlertDialog("Error", "A server error occored. Try again later.");
+                showHintAlertDialog(getString(R.string.error), getString(R.string.error_try_again_later));
             }
         });
     }
@@ -264,13 +264,13 @@ public class LoginActivity extends AppCompatActivity {
 
         if (exception.getErrorCode().equals("ERROR_USER_NOT_FOUND")) {
             trackInteraction("Login", "Error", "login_no_account");
-            showHintAlertDialog("Error", "No Account for this email address");
+            showHintAlertDialog(getString(R.string.error), getString(R.string.login_no_account_error));
         } else if (exception.getErrorCode().equals("ERROR_WRONG_PASSWORD")) {
             trackInteraction("Login", "Error", "login_wrong_password");
-            showHintAlertDialog("Error", "Wrong Password for this email address");
+            showHintAlertDialog(getString(R.string.error), getString(R.string.login_wrong_password));
         } else {
             trackInteraction("Login", "Error", "login_default_error");
-            showHintAlertDialog("Error", "Try again later!");
+            showHintAlertDialog(getString(R.string.error), getString(R.string.error_try_again_later));
         }
     }
 

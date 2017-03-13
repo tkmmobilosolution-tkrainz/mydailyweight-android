@@ -21,8 +21,9 @@
     <string name="ok">OK</string>
     <string name="error">Fehler</string>
     <string name="hint">Hinweis</string>
-    <string name="emial">Email</string>
+    <string name="email">Email</string>
     <string name="password">Passwort</string>
+    <string name="no_connection">Du bist mit keinem Netzwerk verbunden. Bitte überprüfe deine Netzwerkseinstellungen und versuche es erneut.</string>
     <string name="email_worng_format">Die von dir eingegebne Email Adresse hat das falsche Format.\n\nBeispiel: beispiel@anbieter.com</string>
     <string name="password_worng_format">Das von dir eingegebene Passwort muss mindestens 8 Zeichen lang sein.</string>
     <string name="error_try_again_later">Etwas ist schief gelaufen. Bitte versuche es später wieder.</string>
@@ -49,6 +50,7 @@
     <string name="main_nothing_download">Es gibt keine neuen Daten zum herunterladen. Deine Daten sind auf dem neuesten Stand.</string>
     <string name="main_logout_sync">Bevor du dich abmeldest müssen deine Einträge synchronisiert werden. Wenn du dich abmeldest werden diese automatisch synchronisiert.</string>
     <string name="main_logout_no_sync">Bist du dir sicher, dass du dich abmelden willst?</string>
+    <string name="main_nothing_sync">Es gibt keine Daten zum Synchronisieren.</string>
 
     <string name="progressbar_sign_in">Anmelden ...</string>
     <string name="progressbar_register_user">Erstelle Konto ...</string>

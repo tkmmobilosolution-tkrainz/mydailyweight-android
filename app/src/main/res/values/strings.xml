@@ -20,8 +20,9 @@
     <string name="ok">OK</string>
     <string name="error">Error</string>
     <string name="hint">Hint</string>
-    <string name="emial">Email</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="no_connection">You are not connected to a network. Please check your network settings and try again.</string>
     <string name="email_worng_format">The entered email address has the wrong format.\n\nExample: example@provider.com</string>
     <string name="password_worng_format">The password must have a minimum length of 8 characters</string>
     <string name="error_try_again_later">Somethings gone wrong. Please try agein later.</string>
@@ -48,7 +49,7 @@
     <string name="main_nothing_download">There is no data to download. You are up to date.</string>
     <string name="main_logout_sync">There are some entries to sychronise before logout. When you logout the synchronization also will be done.</string>
     <string name="main_logout_no_sync">Are you sure you want to logout?</string>
-
+    <string name="main_nothing_sync">There is no data to synchronize.</string>
 
     <string name="progressbar_sign_in">Sign in ...</string>
     <string name="progressbar_register_user">Register account ...</string>

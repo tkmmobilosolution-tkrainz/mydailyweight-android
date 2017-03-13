@@ -35,7 +35,7 @@ public class StartupActivity extends AppCompatActivity {
         final TextView hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
         final TextView hintView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
         final Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
-        hintButton.setText("Try again");
+        hintButton.setText(getString(R.string.try_again));
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,8 +45,8 @@ public class StartupActivity extends AppCompatActivity {
             }
         });
 
-        hintTitleView.setText("Hint");
-        hintView.setText("You are not connected to the internet. Please connect to Wifi or mobile network.");
+        hintTitleView.setText(getString(R.string.hint));
+        hintView.setText(getString(R.string.no_connection));
 
         dialogHintBuilder.setView(hintAlertView);
         hintAlertDialog = dialogHintBuilder.create();

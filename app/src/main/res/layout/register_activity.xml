@@ -6,7 +6,7 @@
     android:background="@color/primaryGray">
 
     <TextView
-        android:text="Register your account."
+        android:text="@string/register_welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -29,7 +29,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:textSize="20dp"
-        android:hint="Email"
+        android:hint="@string/email"
         android:id="@+id/registerEmail" />
 
     <EditText
@@ -41,7 +41,7 @@
         android:inputType="textPassword"
         android:background="@color/white"
         android:textSize="20dp"
-        android:hint="Password"
+        android:hint="@string/password"
         android:id="@+id/registerPassword" />
 
 
@@ -54,11 +54,11 @@
         android:inputType="textPassword"
         android:background="@color/white"
         android:textSize="20dp"
-        android:hint="Password"
+        android:hint="@string/password"
         android:id="@+id/registerAcceptPassword" />
 
     <Button
-        android:text="Register"
+        android:text="@string/register"
         android:layout_width="175dp"
         android:layout_height="40dp"
         android:layout_gravity="center"

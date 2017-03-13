@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this, R.style.SpinnerTheme);
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        progressDialog.setMessage("Register User");
+        progressDialog.setMessage(getString(R.string.progressbar_register_user));
 
         LayoutInflater inflater = this.getLayoutInflater();
         final AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(RegisterActivity.this);
@@ -132,19 +132,19 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!emailFormat(email)) {
             trackInteraction("Register", "Hint", "register_email_password");
-            showHintAlertDialog("Hint", "Email wrong format!");
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.email_worng_format));
             return;
         }
 
         if (!passwordFormat(password)) {
             trackInteraction("Register", "Hint", "register_password_format");
-            showHintAlertDialog("Hint", "Password must have minimum 8 characters");
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.password_worng_format));
             return;
         }
 
         if (!passwordMatch(password, matchPassword)) {
             trackInteraction("Register", "Hint", "register_password_not_match");
-            showHintAlertDialog("Hint", "Password not match");
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.register_passwords_not_match));
             return;
         }
 
@@ -166,10 +166,10 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseAuthException exception = (FirebaseAuthException) task.getException();
         if (exception.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
             trackInteraction("Register", "Error", "register_account_exists");
-            showHintAlertDialog("Error", "Email already in use!");
+            showHintAlertDialog(getString(R.string.error), getString(R.string.register_email_already_use));
         } else {
             trackInteraction("Register", "Error", "register_default_error");
-            showHintAlertDialog("Error", "Try again later.");
+            showHintAlertDialog(getString(R.string.error), getString(R.string.error_try_again_later));
         }
     }
 
