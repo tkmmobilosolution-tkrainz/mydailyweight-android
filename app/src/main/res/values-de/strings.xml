@@ -31,6 +31,14 @@
     <string name="register">Registrieren</string>
     <string name="logout">Abmelden</string>
     <string name="progress">Fortschritt</string>
+    <string name="gender_male">Mann</string>
+    <string name="gender_female">Frau</string>
+    <string name="name">Name</string>
+    <string name="age">Alter</string>
+    <string name="gender">Geschlecht</string>
+    <string name="height">Größe</string>
+    <string name="start_weight">Startgewicht</string>
+    <string name="dream_weight">Wunschgewicht</string>
 
     <string name="login_welcome">Wilkommen bei MyDailyWeight, deinem persöhnlichem Gewichtstagebuch.\n\n Noch keinen Account? Dann registriere dich gleich kostenlos, oder melde dich mit deinem Konto an.</string>
     <string name="login_sign_in">Anmelden</string>
@@ -52,9 +60,18 @@
     <string name="main_logout_no_sync">Bist du dir sicher, dass du dich abmelden willst?</string>
     <string name="main_nothing_sync">Es gibt keine Daten zum Synchronisieren.</string>
 
+    <string name="user_welcome">Gib hier bitte deine persöhnlichen Informationen für dein Profil an.</string>
+    <string name="user_button_update">Aktualisiere Profil</string>
+    <string name="user_no_nickname">Kein Benutzername eingegeben.</string>
+    <string name="user_no_age">Kein Alter eingegeben.</string>
+    <string name="user_no_height">Keine Größe eingegeben.</string>
+    <string name="user_no_current_weight">Kein Startgewicht eingegeben.</string>
+    <string name="user_no_dream_weight">Kein Wunschgewicht eingegeben.</string>
+
     <string name="progressbar_sign_in">Anmelden ...</string>
     <string name="progressbar_register_user">Erstelle Konto ...</string>
     <string name="progressbar_refresh">Aktualisieren ...</string>
     <string name="progressbar_loading">Lade ...</string>
     <string name="progressbar_sync">Synchronisiere ...</string>
+    <string name="progressbar_update_user">Speichere Benutzer ...</string>
 </resources>

@@ -30,6 +30,14 @@
     <string name="register">Sign up</string>
     <string name="logout">Logout</string>
     <string name="progress">Progress</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="height">Height</string>
+    <string name="start_weight">Start Weight</string>
+    <string name="dream_weight">Dream Weight</string>
 
     <string name="login_welcome">Welcome to MyDailyWeight, your personal weight diary.\n\n No account? Sign up for free, or sign in to your account.</string>
     <string name="login_sign_in">Sign in</string>
@@ -51,9 +59,18 @@
     <string name="main_logout_no_sync">Are you sure you want to logout?</string>
     <string name="main_nothing_sync">There is no data to synchronize.</string>
 
+    <string name="user_welcome">Please entere here your personal details for your profile.</string>
+    <string name="user_button_update">Update profile</string>
+    <string name="user_no_nickname">No username entered.</string>
+    <string name="user_no_age">No age entered.</string>
+    <string name="user_no_height">No height entered.</string>
+    <string name="user_no_current_weight">No start weight entered.</string>
+    <string name="user_no_dream_weight">No dream weight entered.</string>
+
     <string name="progressbar_sign_in">Sign in ...</string>
     <string name="progressbar_register_user">Register account ...</string>
     <string name="progressbar_refresh">Refesh</string>
     <string name="progressbar_loading">Loading ...</string>
     <string name="progressbar_sync">Synchronizing ...</string>
+    <string name="progressbar_update_user">Save user ...</string>
 </resources>

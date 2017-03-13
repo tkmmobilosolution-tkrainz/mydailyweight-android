@@ -46,8 +46,8 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity);
 
-        genderList.add("Male");
-        genderList.add("Female");
+        genderList.add(getString(R.string.gender_male));
+        genderList.add(getString(R.string.gender_female));
 
         final EditText name = (EditText) findViewById(R.id.userNameEditText);
         final EditText age = (EditText) findViewById(R.id.userAgeEditText);
@@ -62,7 +62,7 @@ public class UserActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this, R.style.SpinnerTheme);
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        progressDialog.setMessage("Updateing Profile");
+        progressDialog.setMessage(getString(R.string.progressbar_update_user));
 
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +72,7 @@ public class UserActivity extends AppCompatActivity {
             }
         });
 
-        hintTitleView.setText("Hint");
+        hintTitleView.setText(getString(R.string.hint));
 
         dialogHintBuilder.setView(hintAlertView);
         hintAlertDialog = dialogHintBuilder.create();
@@ -117,35 +117,35 @@ public class UserActivity extends AppCompatActivity {
 
                 if (!isStringAvailable(userName)) {
                     trackInteraction("User", "Hint", "user_no_username");
-                    hintMessageView.setText("No username entered.");
+                    hintMessageView.setText(getString(R.string.user_no_nickname));
                     hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userAge)) {
                     trackInteraction("User", "Hint", "user_no_age");
-                    hintMessageView.setText("No age entered.");
+                    hintMessageView.setText(getString(R.string.user_no_age));
                     hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userHeight)) {
                     trackInteraction("User", "Hint", "user_no_height");
-                    hintMessageView.setText("No height entered.");
+                    hintMessageView.setText(getString(R.string.user_no_height));
                     hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userCurrentWeight)) {
                     trackInteraction("User", "Hint", "user_no_current_weight");
-                    hintMessageView.setText("No current weight entered.");
+                    hintMessageView.setText(getString(R.string.user_no_current_weight));
                     hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userDreamWeight)) {
                     trackInteraction("User", "Hint", "user_no_dream_weight");
-                    hintMessageView.setText("No dream weight entered.");
+                    hintMessageView.setText(getString(R.string.user_no_dream_weight));
                     hintAlertDialog.show();
                     return;
                 }

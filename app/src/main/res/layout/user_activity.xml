@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:text="TextView"
+        android:text="@string/user_welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/welcomeUser"
@@ -27,7 +27,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Name"
+            android:text="@string/name"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:id="@+id/userNameTextView"
@@ -54,7 +54,9 @@
             android:textCursorDrawable="@null"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:hint="@string/name"
+            android:textColorHint="@android:color/darker_gray"/>
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +65,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Age"
+            android:text="@string/age"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:id="@+id/userAgeTextView"
@@ -90,7 +92,9 @@
             android:textCursorDrawable="@null"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:hint="@string/age"
+            android:textColorHint="@android:color/darker_gray"/>
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +103,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Gender"
+            android:text="@string/gender"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:id="@+id/userGenderTextView"
@@ -130,7 +134,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Height"
+            android:text="@string/height"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:id="@+id/userHeightTextView"
@@ -157,7 +161,9 @@
             android:textCursorDrawable="@null"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:hint="@string/height"
+            android:textColorHint="@android:color/darker_gray"/>
     </LinearLayout>
 
     <LinearLayout
@@ -166,7 +172,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Current Weight"
+            android:text="@string/start_weight"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:id="@+id/userWeightTextView"
@@ -193,7 +199,9 @@
             android:textCursorDrawable="@null"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:hint="@string/start_weight"
+            android:textColorHint="@android:color/darker_gray"/>
     </LinearLayout>
 
     <LinearLayout
@@ -202,7 +210,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Dream Weight"
+            android:text="@string/dream_weight"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:id="@+id/userDreamWeightTextView"
@@ -229,11 +237,13 @@
             android:textCursorDrawable="@null"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:hint="@string/dream_weight"
+            android:textColorHint="@android:color/darker_gray"/>
     </LinearLayout>
 
     <Button
-        android:text="Update Profile"
+        android:text="@string/user_button_update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
