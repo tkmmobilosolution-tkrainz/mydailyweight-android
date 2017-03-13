@@ -4,6 +4,8 @@
         android:title="Add new Weight" android:checked="true"/>
     <item android:id="@+id/sync"
         android:title="Sync Weights" />
+    <item android:id="@+id/download"
+        android:title="Get sync data" />
     <item android:id="@+id/logout"
         android:title="Logout User" />
 </menu>

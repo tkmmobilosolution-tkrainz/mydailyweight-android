@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -65,6 +67,7 @@ public class UserActivity extends AppCompatActivity {
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("User", "Hint", "user_hint_button");
                 hintAlertDialog.dismiss();
             }
         });
@@ -72,7 +75,6 @@ public class UserActivity extends AppCompatActivity {
         hintTitleView.setText("Hint");
 
         dialogHintBuilder.setView(hintAlertView);
-        hintAlertDialog.setCancelable(false);
         hintAlertDialog = dialogHintBuilder.create();
 
         Spinner genderSpinner = (Spinner) findViewById(R.id.spinnerGender);
@@ -114,29 +116,41 @@ public class UserActivity extends AppCompatActivity {
                 String userDreamWeight = dreamWeight.getText().toString();
 
                 if (!isStringAvailable(userName)) {
+                    trackInteraction("User", "Hint", "user_no_username");
                     hintMessageView.setText("No username entered.");
+                    hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userAge)) {
+                    trackInteraction("User", "Hint", "user_no_age");
                     hintMessageView.setText("No age entered.");
+                    hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userHeight)) {
+                    trackInteraction("User", "Hint", "user_no_height");
                     hintMessageView.setText("No height entered.");
+                    hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userCurrentWeight)) {
+                    trackInteraction("User", "Hint", "user_no_current_weight");
                     hintMessageView.setText("No current weight entered.");
+                    hintAlertDialog.show();
                     return;
                 }
 
                 if (!isStringAvailable(userDreamWeight)) {
+                    trackInteraction("User", "Hint", "user_no_dream_weight");
                     hintMessageView.setText("No dream weight entered.");
+                    hintAlertDialog.show();
                     return;
                 }
+
+                FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getApplicationContext());
 
                 mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("name").setValue(userName);
                 mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
@@ -145,6 +159,9 @@ public class UserActivity extends AppCompatActivity {
                 mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("height").setValue(userHeight);
                 mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("currentWeight").setValue(userCurrentWeight);
                 mDatabase.child("user_profile").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("dreamWeight").setValue(userDreamWeight);
+
+                analytics.setUserProperty("age", userAge);
+                analytics.setUserProperty("gender", gender);
 
                 User newUser = new User();
                 newUser.setName(userName);
@@ -158,6 +175,7 @@ public class UserActivity extends AppCompatActivity {
 
                 progressDialog.hide();
 
+                trackInteraction("User", "Intent", "user_open_main");
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -169,11 +187,18 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void saveUser(User user) {
-        SharedPreferences prefs = getSharedPreferences("USER", Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(user);
         editor.putString("USER", json);
         editor.apply();
+    }
+
+    private void trackInteraction(String key, String value, String event) {
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        Bundle track = new Bundle();
+        track.putString(key, value);
+        analytics.logEvent(event, track);
     }
 }

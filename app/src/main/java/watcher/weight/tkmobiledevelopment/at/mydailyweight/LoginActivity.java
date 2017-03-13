@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -69,12 +71,12 @@ public class LoginActivity extends AppCompatActivity {
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Login", "Hint", "login_hint_button");
                 hintAlertDialog.dismiss();
             }
         });
 
         dialogHintBuilder.setView(hintAlertView);
-        hintAlertDialog.setCancelable(false);
         hintAlertDialog = dialogHintBuilder.create();
 
         mCallbackManager = CallbackManager.Factory.create();
@@ -94,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Login", "Button", "login_clicked_sign_in");
                 loginAction();
             }
         });
@@ -101,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Login", "Button", "login_clicked_facebook");
                 progressDialog.show();
             }
         });
@@ -124,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Login", "Button", "login_clicked_register");
                 showRegisterActivity();
             }
         });
@@ -140,6 +145,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
         authentication.addAuthStateListener(authListener);
     }
 
@@ -148,7 +156,10 @@ public class LoginActivity extends AppCompatActivity {
         authentication.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
+                if (task.isSuccessful()) {
+                    trackInteraction("Login", "Facebook", "login_facebook_sign_in_success");
+                } else {
+                    trackInteraction("Login", "Facebook", "login_facebook_sign_in_failed");
                 }
             }
         });
@@ -176,20 +187,24 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (!task.isSuccessful()) {
                         signInFailed(task);
+                    } else {
+                        trackInteraction("Login", "Sign in", "login_sign_in_success");
                     }
                 }
             });
         } else if (!emailFormat(email)) {
+            trackInteraction("Login", "Hint", "login_email_format");
             showHintAlertDialog("Hint", "Check your email address, wrong format");
         } else if (!passwordFormat(password)) {
+            trackInteraction("Login", "Hint", "login_password_format");
             showHintAlertDialog("Hint", "Password lenght must be 8 characters or longer.");
         }
     }
 
     private void checkUserState(FirebaseUser user) {
         if (user != null) {
-            final Gson gson = new Gson();
-            final String localUser = getSharedPreferences("USER", this.MODE_PRIVATE).getString("USER", null);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            final String localUser = prefs.getString("USER", null);
 
             if (localUser == null || localUser.equals("")) {
                 handleDatabaseUser(user);
@@ -209,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (databaseUser != null) {
                     String dbUserJson = gson.toJson(databaseUser);
-                    SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("USER", dbUserJson);
                     editor.apply();
@@ -234,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
         User savedUser = gson.fromJson(userJson, User.class);
 
         if (savedUser == null) {
-            SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("USER", userJson);
             editor.apply();
@@ -248,10 +263,13 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseAuthException exception = (FirebaseAuthException) task.getException();
 
         if (exception.getErrorCode().equals("ERROR_USER_NOT_FOUND")) {
+            trackInteraction("Login", "Error", "login_no_account");
             showHintAlertDialog("Error", "No Account for this email address");
         } else if (exception.getErrorCode().equals("ERROR_WRONG_PASSWORD")) {
+            trackInteraction("Login", "Error", "login_wrong_password");
             showHintAlertDialog("Error", "Wrong Password for this email address");
         } else {
+            trackInteraction("Login", "Error", "login_default_error");
             showHintAlertDialog("Error", "Try again later!");
         }
     }
@@ -266,18 +284,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showUserActivity() {
+        trackInteraction("Login", "Intent", "login_open_user");
         Intent intent = new Intent(getApplicationContext(), UserActivity.class);
         startActivity(intent);
     }
 
     private void showMainActivity() {
+        trackInteraction("Login", "Intent", "login_open_main");
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 
     private void showRegisterActivity() {
+        trackInteraction("Login", "Intent", "login_open_register");
         Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
         startActivity(intent);
+    }
+
+    private void trackInteraction(String key, String value, String event) {
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        Bundle track = new Bundle();
+        track.putString(key, value);
+        analytics.logEvent(event, track);
     }
 
     @Override

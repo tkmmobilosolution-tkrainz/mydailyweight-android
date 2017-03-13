@@ -1,5 +1,6 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +31,17 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -44,14 +55,27 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog addAlertDialog;
     private AlertDialog hintAlertDialog;
     private AlertDialog logoutAlertDialog;
+    private AlertDialog downloadAlertDialog;
+
+    private TextView hintTitleView, hintMessageView;
+
+    private TextView hintLogoutMessage;
+    private Button logoutButton;
+    private Button infoButton;
 
     private ArrayList<Weight> list = new ArrayList<>();
+    private ArrayList<Weight> dbList = new ArrayList<>();
     private ListView listView;
     private WeightView weightView;
     private String today;
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     private InterstitialAd mInterstitialAd;
+    private RewardedVideoAd rewardedAd;
 
+    private ProgressDialog progressDialog = null;
+
+    private boolean rewardedFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +89,91 @@ public class MainActivity extends AppCompatActivity {
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstital_ad_unit_id));
         requestNewInterstitial();
 
-        trackInteraction("MainActivity", "start", "Screen_MainActivity");
+        rewardedAd = MobileAds.getRewardedVideoAdInstance(this);
+        loadRewardedVideo();
+        rewardedAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onRewardedVideoAdLoaded() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+                if (!rewardedFinished) {
+                    trackInteraction("Main", "Rewarded", "main_sync_canceled");
+                    loadRewardedVideo();
+                    Toast.makeText(MainActivity.this, "Sync faild. Watch video till the end.", Toast.LENGTH_SHORT).show();
+                }
+
+                rewardedFinished = false;
+                Log.e("Rewarded error", "");
+            }
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+                rewardedFinished = true;
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                if (prefs.getBoolean("logoutsync", false)) {
+                    trackInteraction("Main", "Rewarded", "main_sync_logout_success");
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("logoutsync", false);
+                    editor.apply();
+
+                    syncDatabase();
+                    logout();
+                } else {
+                    trackInteraction("Main", "Rewarded", "main_sync_success");
+                    syncDatabase();
+                }
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+                trackInteraction("Main", "Rewarded", "main_rewarded_error_" + i);
+                Log.e("Rewarded error", "" + i);
+            }
+        });
+
+        progressDialog = new ProgressDialog(this, R.style.SpinnerTheme);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
 
         today = getCurrentDate();
         list = getWeightList();
 
+        infoButton = (Button) findViewById(R.id.infoButton);
+        infoButton.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_progress_button");
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                final Gson gson = new Gson();
+                User savedUser = gson.fromJson(pref.getString("USER", null), User.class);
+                double differenceSinceBegin = Double.parseDouble(savedUser.getCurrentWeight()) - list.get(list.size() - 1).weightValue;
+                double differenceToDream = Double.parseDouble(savedUser.getDreamWeight()) - list.get(list.size() - 1).weightValue;
+                String hintText = "Difference since Begin: " + Math.abs(differenceSinceBegin) + " kg" + "\n\n" +
+                        "Difference to dream weight: " + Math.abs(differenceToDream) + " kg";
+
+                showHintAlertDialog("Weight Information", hintText);
+            }
+        });
 
         weightView = (WeightView) findViewById(R.id.weightView);
         weightView.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
@@ -81,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (list.size() == 0 || position == list.size()) {
-                    trackInteraction("List", "add", "Click_Add_List");
+                    trackInteraction("Main", "List", "main_list_add");
                     showAddDialog();
                 }
             }
@@ -99,14 +203,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (newWeight.getText().toString().equals("")) {
+                    trackInteraction("Main", "Button", "main_add_hint_button_failed");
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_weight_entered), Toast.LENGTH_LONG).show();
                 } else {
-                    trackInteraction("Button", "Add", "Click_Add_Button");
+                    progressDialog.setMessage("Refresh");
+                    progressDialog.show();
+                    trackInteraction("Main", "Button", "main_add_hint_button_success");
                     double weight = Double.parseDouble(newWeight.getText().toString());
                     Weight currentWeight = new Weight(weight, today);
                     list.add(currentWeight);
                     refreshLayout(list);
+
+                    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sharedPrefs.edit();
+                    editor.putBoolean("able_sync", true);
+                    editor.apply();
+
                     addAlertDialog.dismiss();
+                    progressDialog.hide();
                 }
             }
         });
@@ -115,59 +229,94 @@ public class MainActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Button", "Cancel", "Click_Cancel_Button");
+                trackInteraction("Main", "Button", "main_add_hint_button_cancel");
                 addAlertDialog.dismiss();
             }
         });
 
         addDialogBuilder.setView(addAlertView);
-        addAlertDialog.setCancelable(false);
         addAlertDialog = addDialogBuilder.create();
         addAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(this);
         View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
 
-        TextView hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
-        TextView hintMessageView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
+        hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
+        hintMessageView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
 
         Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Button", "Hint", "Click_Hint_Button");
+                trackInteraction("Main", "Button", "main_hint_button");
                 hintAlertDialog.dismiss();
             }
         });
 
-        hintTitleView.setText("Hint");
-        hintMessageView.setText(getString(R.string.add_hint));
-
         dialogHintBuilder.setView(hintAlertView);
-        hintAlertDialog.setCancelable(false);
         hintAlertDialog = dialogHintBuilder.create();
 
         final AlertDialog.Builder logoutHintBuilder = new AlertDialog.Builder(this);
         View logoutHintView = inflater.inflate(R.layout.logout_hint, null);
+        hintLogoutMessage = (TextView) logoutHintView.findViewById(R.id.logoutHintMessage);
         Button cancelLogoutButton = (Button) logoutHintView.findViewById(R.id.cancelHintButton);
         cancelLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_logout_hint_cancel_button");
                 logoutAlertDialog.dismiss();
             }
         });
 
-        Button logoutButton = (Button) logoutHintView.findViewById(R.id.logoutHintButton);
+        logoutButton = (Button) logoutHintView.findViewById(R.id.logoutHintButton);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout();
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                if (sharedPrefs.getBoolean("able_sync", false)) {
+                    trackInteraction("Main", "Button", "main_logout_hint_logout_sync_button");
+                    SharedPreferences.Editor editor = sharedPrefs.edit();
+                    editor.putBoolean("logoutsync", true);
+                    editor.apply();
+                    rewardedAd.show();
+                } else {
+                    trackInteraction("Main", "Button", "main_logout_hint_logout_button");
+                    logout();
+                }
             }
         });
 
         logoutHintBuilder.setView(logoutHintView);
-        logoutAlertDialog.setCancelable(false);
         logoutAlertDialog = logoutHintBuilder.create();
+
+        final AlertDialog.Builder downloadHintBuilder = new AlertDialog.Builder(this);
+        View downloadHintView = inflater.inflate(R.layout.logout_hint, null);
+        TextView downloadMessageView = (TextView) downloadHintView.findViewById(R.id.logoutHintMessage);
+        downloadMessageView.setText("If you are downloading sync data, you will loose some entries.");
+        Button cancelDownloadButton = (Button) downloadHintView.findViewById(R.id.cancelHintButton);
+        cancelDownloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_download_hint_cancel_button");
+                downloadAlertDialog.dismiss();
+            }
+        });
+
+        Button downloadButton = (Button) downloadHintView.findViewById(R.id.logoutHintButton);
+        downloadButton.setText("Download anyway");
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_download_hint_overwrite_button");
+                list = dbList;
+                downloadAlertDialog.hide();
+                refreshLayout(list);
+            }
+        });
+
+        downloadHintBuilder.setView(downloadHintView);
+        downloadAlertDialog = downloadHintBuilder.create();
     }
 
     @Override
@@ -180,12 +329,76 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuAdd:
-                trackInteraction("Menu", "Add", "Click_Add_Menu");
+                trackInteraction("Main", "Menu", "main_menu_add");
                 showAddDialog();
                 return true;
             case R.id.sync:
+                trackInteraction("Main", "Menu", "main_menu_sync");
+                progressDialog.setMessage("Logging in");
+                progressDialog.show();
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+                if (prefs.getBoolean("able_sync", false)) {
+                    trackInteraction("Main", "Sync", "main_sync_start");
+                    rewardedAd.show();
+                } else {
+                    trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
+                    showHintAlertDialog("Hint", "Nothing to sync. Up to date.");
+                }
+                progressDialog.hide();
+                return true;
+            case R.id.download:
+                trackInteraction("Main", "Menu", "main_menu_download");
+                progressDialog.setMessage("Loading Data");
+                progressDialog.show();
+                final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                database.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        GenericTypeIndicator<ArrayList<Weight>> arrayList = new GenericTypeIndicator<ArrayList<Weight>>() {};
+                        dbList = dataSnapshot.getValue(arrayList);
+
+                        if (dbList != null) {
+
+                            if (list.size() > dbList.size()) {
+                                trackInteraction("Main", "Download", "main_download_overwrite");
+                                downloadAlertDialog.show();
+                            } else if (dbList.size() == list.size()){
+                                trackInteraction("Main", "Download", "main_download_up_to_date");
+                                showHintAlertDialog("Hint", "No data available to download.");
+                            } else  {
+                                trackInteraction("Main", "Download", "main_download_success");
+                                list = dbList;
+                                refreshLayout(list);
+                            }
+                        }  else {
+                            trackInteraction("Main", "Download", "main_download_no_data_available");
+                            showHintAlertDialog("Hint", "No data available to download.");
+                        }
+
+                        progressDialog.hide();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //showHintAlertDialog("Error", "A server error occored. Try again later.");
+                        trackInteraction("Main", "Download", "main_download_error");
+                        progressDialog.hide();
+                    }
+                });
                 return true;
             case R.id.logout:
+                trackInteraction("Main", "Menu", "main_menu_logout");
+                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("able_sync", false)) {
+                    trackInteraction("Main", "Logout", "main_logout_sync");
+                    logoutButton.setText("Sync & Logout");
+                    hintLogoutMessage.setText("Some entries are not sync. When logout you will sync your data. Otherwise you will loose some data.");
+                } else {
+                    trackInteraction("Main", "Logout", "main_logout");
+                    logoutButton.setText("Logout");
+                    hintLogoutMessage.setText("Are you sure you want logout current user?");
+                }
+
                 logoutAlertDialog.show();
                 return true;
             default:
@@ -194,11 +407,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshLayout(ArrayList<Weight> list) {
-
+        trackInteraction("Main", "List", "main_list_refresh");
         saveList(list);
         weightView.setWeightArrayList(list);
         weightView.setVisibility(list.size() != 0 ? View.VISIBLE : View.GONE);
         weightView.invalidate();
+        infoButton.setVisibility(list.size() != 0 ? View.VISIBLE : View.GONE);
         listView.setDivider(new ColorDrawable(Color.WHITE));
         listView.setDividerHeight(1);
         listView.setAdapter(new WeightListAdapter(getApplicationContext(), list));
@@ -211,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
-                    trackInteraction("Interstitial", "closed", "Interstitial_Closed");
+                    trackInteraction("Main", "Interstitial", "Interstitial_Closed");
                 }
 
                 @Override
@@ -219,38 +433,38 @@ public class MainActivity extends AppCompatActivity {
                     super.onAdFailedToLoad(i);
                     switch (i) {
                         case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Internal_Error");
+                            trackInteraction("Main", "Interstitial", "Interstitial_Internal_Error");
                             break;
                         case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Invalid_Request");
+                            trackInteraction("Main", "Interstitial", "Interstitial_Invalid_Request");
                             break;
                         case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Network_Error");
+                            trackInteraction("Main", "Interstitial", "Interstitial_Network_Error");
                             break;
                         case AdRequest.ERROR_CODE_NO_FILL:
-                            trackInteraction("Interstitial", "failed", "Interstitial_No_Ad");
+                            trackInteraction("Main", "Interstitial", "Interstitial_No_Ad");
                             break;
                         default:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Failed_Default");
+                            trackInteraction("Main", "Interstitial", "Interstitial_Failed_Default");
                     }
                 }
 
                 @Override
                 public void onAdLeftApplication() {
                     super.onAdLeftApplication();
-                    trackInteraction("Interstitial", "leftApp", "Interstitial_Left");
+                    trackInteraction("Main", "Interstitial", "Interstitial_Left");
                 }
 
                 @Override
                 public void onAdOpened() {
                     super.onAdOpened();
-                    trackInteraction("Interstitial", "opened", "Interstitial_Opened");
+                    trackInteraction("Main", "Interstitial", "Interstitial_Opened");
                 }
 
                 @Override
                 public void onAdLoaded() {
                     super.onAdLoaded();
-                    trackInteraction("Interstitial", "loaded", "Interstitial_Loaded");
+                    trackInteraction("Main", "Interstitial", "Interstitial_Loaded");
                 }
             });
 
@@ -262,13 +476,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAddDialog() {
         if (list.size() == 0) {
-            trackInteraction("Add", "first", "Weight_Add_First");
+            trackInteraction("Main", "Add", "main_weight_first");
             addAlertDialog.show();
         } else if (list.get(list.size() - 1).date.equals(today)) {
-            trackInteraction("Add", "tomorrow", "Weight_Add_Tomorrow");
-            hintAlertDialog.show();
+            trackInteraction("Main", "Add", "main_weight_tomorrow");
+            showHintAlertDialog("Hint", getString(R.string.add_hint));
         } else {
-            trackInteraction("Add", "more", "Weight_Add_More");
+            trackInteraction("Main", "Add", "main_weight_more");
             addAlertDialog.show();
         }
     }
@@ -285,11 +499,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<Weight> getWeightList() {
+        trackInteraction("Main", "List", "main_list_get");
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
         String json = sharedPrefs.getString("list", null);
         Type type = new TypeToken<ArrayList<Weight>>() {}.getType();
         ArrayList<Weight> l = gson.fromJson(json, type);
+
+        if (l == null ) {
+            trackInteraction("Main", "List", "main_list_download");
+            final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    GenericTypeIndicator<ArrayList<Weight>> arrayList = new GenericTypeIndicator<ArrayList<Weight>>() {};
+                    dbList = dataSnapshot.getValue(arrayList);
+
+                    if (dbList != null) {
+                        trackInteraction("Main", "List", "main_list_db_list");
+                        refreshLayout(dbList);
+                    } else {
+                        trackInteraction("Main", "List", "main_list_empty");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    trackInteraction("Main", "List", "main_list_default_error");
+                    progressDialog.hide();
+                }
+            });
+        }
+
         return l == null ? new ArrayList<Weight>() : l;
     }
 
@@ -310,13 +551,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                trackInteraction("Banner", "closed", "Banner_Closed");
+                trackInteraction("Main", "Banner", "Banner_Closed");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                trackInteraction("Banner", "loaded", "Banner_Loaded");
+                trackInteraction("Main", "Banner", "Banner_Loaded");
             }
 
             @Override
@@ -324,32 +565,32 @@ public class MainActivity extends AppCompatActivity {
                 super.onAdFailedToLoad(i);
                 switch (i) {
                     case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                        trackInteraction("Banner", "failed", "Banner_Internal_Error");
+                        trackInteraction("Main", "Banner", "Banner_Internal_Error");
                         break;
                     case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                        trackInteraction("Banner", "failed", "Banner_Invalid_Request");
+                        trackInteraction("Main", "Banner", "Banner_Invalid_Request");
                         break;
                     case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                        trackInteraction("Banner", "failed", "Banner_Network_Error");
+                        trackInteraction("Main", "Banner", "Banner_Network_Error");
                         break;
                     case AdRequest.ERROR_CODE_NO_FILL:
-                        trackInteraction("Banner", "failed", "Banner_No_Ad");
+                        trackInteraction("Main", "Banner", "Banner_No_Ad");
                         break;
                     default:
-                        trackInteraction("Banner", "failed", "Banner_Failed_Default");
+                        trackInteraction("Main", "Banner", "Banner_Failed_Default");
                 }
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                trackInteraction("Banner", "opened", "Banner_Opened");
+                trackInteraction("Main", "Banner", "Banner_Opened");
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                trackInteraction("Banner", "leftApp", "Banner_Left");
+                trackInteraction("Main", "Banner", "Banner_Left");
             }
         });
     }
@@ -367,16 +608,46 @@ public class MainActivity extends AppCompatActivity {
         mInterstitialAd.loadAd(adRequest);
     }
 
+    private void loadRewardedVideo() {
+        rewardedAd.loadAd(getString(R.string.ad_video), new AdRequest.Builder().build());
+    }
+
     private void logout() {
+        trackInteraction("Main", "Logout", "main_logout_success");
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
 
-        SharedPreferences prefs = getSharedPreferences("USER", Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = prefs.edit();
         editor.remove("USER");
+        editor.remove("list");
+        editor.remove("able_sync");
+        editor.remove("logoutsync");
         editor.apply();
 
+        trackInteraction("Main", "Intent", "main_open_login");
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private void syncDatabase() {
+        progressDialog.setMessage("Sync");
+        progressDialog.show();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mDatabase.child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(list);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean("able_sync", false);
+        editor.apply();
+        progressDialog.hide();
+    }
+
+    private void showHintAlertDialog(String title, String message) {
+        trackInteraction("Main", "Hint", "main_show_hint");
+        if (progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+        hintTitleView.setText(title);
+        hintMessageView.setText(message);
+        hintAlertDialog.show();
     }
 }

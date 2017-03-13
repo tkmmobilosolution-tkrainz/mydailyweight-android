@@ -8,6 +8,9 @@ import java.util.Date;
 
 public class Weight {
 
+    public Weight() {
+    }
+
     public Weight(double weightValue, String date) {
         this.weightValue = weightValue;
         this.date = date;

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -34,10 +35,12 @@ public class StartupActivity extends AppCompatActivity {
         final TextView hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
         final TextView hintView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
         final Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
-
+        hintButton.setText("Try again");
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Startup", "Button", "startup_tray_again");
+                checkOnlineState();
                 hintAlertDialog.dismiss();
             }
         });
@@ -48,27 +51,52 @@ public class StartupActivity extends AppCompatActivity {
         dialogHintBuilder.setView(hintAlertView);
         hintAlertDialog = dialogHintBuilder.create();
 
-        if (isOnline()) {
-            if (isUserLoggedIn()) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }
-        } else {
-            hintAlertDialog.show();
-        }
+        checkOnlineState();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkOnlineState();
     }
 
     private boolean isUserLoggedIn() {
+        trackInteraction("Startup", "User", "startup_check_user_logged_in");
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
     public boolean isOnline() {
+        trackInteraction("Startup", "User", "startup_check_network_connection");
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    private void checkOnlineState() {
+        trackInteraction("Startup", "Online", "startup_check_online");
+        if (isOnline()) {
+            trackInteraction("Startup", "Online", "startup_check_device_online");
+            if (isUserLoggedIn()) {
+                trackInteraction("Startup", "Online", "startup_open_main");
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                trackInteraction("Startup", "Online", "startup_open_login");
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
+        } else {
+            trackInteraction("Startup", "Online", "startup_check_device_offline");
+            hintAlertDialog.show();
+        }
+    }
+
+    private void trackInteraction(String key, String value, String event) {
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        Bundle track = new Bundle();
+        track.putString(key, value);
+        analytics.logEvent(event, track);
     }
 }

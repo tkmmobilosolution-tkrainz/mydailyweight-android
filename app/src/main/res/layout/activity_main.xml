@@ -12,9 +12,21 @@
     android:background="@color/primaryGray"
     tools:context="watcher.weight.tkmobiledevelopment.at.mydailyweight.MainActivity">
 
+
+    <Button
+        android:text="Progress"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primaryYellow"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/infoButton" />
+
     <watcher.weight.tkmobiledevelopment.at.mydailyweight.WeightView
         android:id="@+id/weightView"
         android:layout_width="match_parent"
+        android:layout_below="@id/infoButton"
         android:layout_height="220dp"
         />
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -46,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Register", "Hint", "register_clicked_register");
                 createUserAction();
             }
         });
@@ -64,12 +66,12 @@ public class RegisterActivity extends AppCompatActivity {
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trackInteraction("Register", "Hint", "register_hint_button");
                 hintAlertDialog.dismiss();
             }
         });
 
         dialogHintBuilder.setView(hintAlertView);
-        hintAlertDialog.setCancelable(false);
         hintAlertDialog = dialogHintBuilder.create();
 
         authListener = new FirebaseAuth.AuthStateListener() {
@@ -78,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     progressDialog.hide();
+                    trackInteraction("Register", "Intent", "register_open_user");
                     Intent intent = new Intent(getApplicationContext(), UserActivity.class);
                     startActivity(intent);
                 }
@@ -128,16 +131,19 @@ public class RegisterActivity extends AppCompatActivity {
         String matchPassword = passwordMatchET.getText().toString();
 
         if (!emailFormat(email)) {
+            trackInteraction("Register", "Hint", "register_email_password");
             showHintAlertDialog("Hint", "Email wrong format!");
             return;
         }
 
         if (!passwordFormat(password)) {
+            trackInteraction("Register", "Hint", "register_password_format");
             showHintAlertDialog("Hint", "Password must have minimum 8 characters");
             return;
         }
 
         if (!passwordMatch(password, matchPassword)) {
+            trackInteraction("Register", "Hint", "register_password_not_match");
             showHintAlertDialog("Hint", "Password not match");
             return;
         }
@@ -148,6 +154,8 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (!task.isSuccessful()) {
                         createUserFailed(task);
+                    } else {
+                        trackInteraction("Register", "Sign up", "register_user_registered");
                     }
                 }
             });
@@ -157,9 +165,18 @@ public class RegisterActivity extends AppCompatActivity {
     private void createUserFailed(Task<AuthResult> task) {
         FirebaseAuthException exception = (FirebaseAuthException) task.getException();
         if (exception.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
+            trackInteraction("Register", "Error", "register_account_exists");
             showHintAlertDialog("Error", "Email already in use!");
         } else {
+            trackInteraction("Register", "Error", "register_default_error");
             showHintAlertDialog("Error", "Try again later.");
         }
+    }
+
+    private void trackInteraction(String key, String value, String event) {
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        Bundle track = new Bundle();
+        track.putString(key, value);
+        analytics.logEvent(event, track);
     }
 }
