@@ -54,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (isOnline()) {
                     createUserAction();
                 } else {
+                    trackInteraction("Register", "Network", "register_network_offline");
                     hintNetworkAlert.show();
                 }
             }
@@ -106,6 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                 trackInteraction("Register", "Button", "register_tray_again");
                 hintAlertDialog.dismiss();
                 if (!isOnline()) {
+                    trackInteraction("Register", "Network", "register_always_network_offline");
                     hintNetworkAlert.show();
                 }
             }

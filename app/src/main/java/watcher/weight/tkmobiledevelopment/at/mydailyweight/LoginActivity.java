@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (isOnline()) {
                     loginAction();
                 } else {
+                    trackInteraction("Login", "Network", "login_sign_in_network_offline");
                     hintNetworkAlert.show();
                 }
             }
@@ -115,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (isOnline()) {
                     progressDialog.show();
                 } else {
+                    trackInteraction("Login", "Network", "login_facebook_network_offline");
                     hintNetworkAlert.show();
                 }
             }
@@ -143,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (isOnline()) {
                     showRegisterActivity();
                 } else {
+                    trackInteraction("Login", "Network", "login_register_network_offline");
                     hintNetworkAlert.show();
                 }
             }
@@ -160,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                 trackInteraction("Login", "Button", "login_tray_again");
                 hintAlertDialog.dismiss();
                 if (!isOnline()) {
+                    trackInteraction("Login", "Network", "login_always_network_offline");
                     hintNetworkAlert.show();
                 }
             }

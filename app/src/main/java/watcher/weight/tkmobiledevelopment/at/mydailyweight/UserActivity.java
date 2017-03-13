@@ -182,6 +182,7 @@ public class UserActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 } else {
+                    trackInteraction("User", "Network", "user_network_offline");
                     hintNetworkAlert.show();
                 }
             }
@@ -199,6 +200,7 @@ public class UserActivity extends AppCompatActivity {
                 trackInteraction("User", "Button", "user_tray_again");
                 hintAlertDialog.dismiss();
                 if (!isOnline()) {
+                    trackInteraction("User", "Network", "user_always_network_offline");
                     hintNetworkAlert.show();
                 }
             }

@@ -333,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
                 trackInteraction("Main", "Button", "main_tray_again");
                 hintAlertDialog.dismiss();
                 if (!isOnline()) {
+                    trackInteraction("Main", "Network", "main_always_network_offline");
                     hintNetworkAlert.show();
                 }
             }
@@ -374,6 +375,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     progressDialog.hide();
                 } else {
+                    trackInteraction("Main", "Network", "main_sync_network_offline");
                     hintNetworkAlert.show();
                 }
                 return true;
@@ -418,6 +420,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } else {
+                    trackInteraction("Main", "Network", "main_download_network_offline");
                     hintNetworkAlert.show();
                 }
                 return true;
@@ -436,6 +439,7 @@ public class MainActivity extends AppCompatActivity {
 
                     logoutAlertDialog.show();
                 } else {
+                    trackInteraction("Main", "Network", "main_logout_network_offline");
                     hintNetworkAlert.show();
                 }
                 return true;
