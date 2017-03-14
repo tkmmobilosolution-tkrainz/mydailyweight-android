@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth authentication = FirebaseAuth.getInstance();
     FirebaseAuth.AuthStateListener authListener = null;
-    private AlertDialog hintAlertDialog, hintNetworkAlert;
+    private AlertDialog hintAlertDialog;
     private ProgressDialog progressDialog = null;
     private TextView hintTitleView, hintMessageView;
     private EditText emailET, passwordET, passwordMatchET;
@@ -51,12 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 trackInteraction("Register", "Hint", "register_clicked_register");
-                if (isOnline()) {
-                    createUserAction();
-                } else {
-                    trackInteraction("Register", "Network", "register_network_offline");
-                    hintNetworkAlert.show();
-                }
+                createUserAction();
             }
         });
 
@@ -94,30 +89,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         };
-
-        final AlertDialog.Builder dialogNetworkBuilder = new AlertDialog.Builder(RegisterActivity.this);
-        final View hintNetworkView = inflater.inflate(R.layout.hint_alert, null);
-        final TextView networkTitleView = (TextView) hintNetworkView.findViewById(R.id.hintTitleTextView);
-        final TextView networkView = (TextView) hintNetworkView.findViewById(R.id.hintMessageTextView);
-        final Button networkButton = (Button) hintNetworkView.findViewById(R.id.hintButton);
-        networkButton.setText(getString(R.string.try_again));
-        networkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                trackInteraction("Register", "Button", "register_tray_again");
-                hintAlertDialog.dismiss();
-                if (!isOnline()) {
-                    trackInteraction("Register", "Network", "register_always_network_offline");
-                    hintNetworkAlert.show();
-                }
-            }
-        });
-
-        networkTitleView.setText(getString(R.string.hint));
-        networkView.setText(getString(R.string.no_connection));
-
-        dialogHintBuilder.setView(hintNetworkView);
-        hintNetworkAlert = dialogNetworkBuilder.create();
     }
 
     @Override
@@ -139,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean passwordMatch(String password, String matchPassword) {
-        return password.endsWith(matchPassword);
+        return password.equals(matchPassword);
     }
 
     private boolean emailFormat(String email) {
@@ -210,13 +181,5 @@ public class RegisterActivity extends AppCompatActivity {
         Bundle track = new Bundle();
         track.putString(key, value);
         analytics.logEvent(event, track);
-    }
-
-    public boolean isOnline() {
-        trackInteraction("Register", "User", "register_check_network_connection");
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

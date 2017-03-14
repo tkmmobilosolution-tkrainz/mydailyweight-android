@@ -74,4 +74,9 @@
     <string name="progressbar_loading">Loading ...</string>
     <string name="progressbar_sync">Synchronizing ...</string>
     <string name="progressbar_update_user">Save user ...</string>
+
+    <string name="menu_add">Add Weight</string>
+    <string name="menu_sync">Synchronize</string>
+    <string name="menu_download">Load Entries</string>
+    <string name="menu_logout">Logout</string>
 </resources>

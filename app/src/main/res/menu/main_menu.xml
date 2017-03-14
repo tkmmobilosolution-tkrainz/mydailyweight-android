@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menuAdd"
-        android:title="Add new Weight" android:checked="true"/>
+        android:title="@string/menu_add" android:checked="true"/>
     <item android:id="@+id/sync"
-        android:title="Sync Weights" />
+        android:title="@string/menu_sync" />
     <item android:id="@+id/download"
-        android:title="Get sync data" />
+        android:title="@string/menu_download" />
     <item android:id="@+id/logout"
-        android:title="Logout User" />
+        android:title="@string/menu_logout" />
 </menu>

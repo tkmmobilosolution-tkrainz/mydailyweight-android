@@ -40,8 +40,8 @@ public class StartupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 trackInteraction("Startup", "Button", "startup_tray_again");
-                checkOnlineState();
                 hintAlertDialog.dismiss();
+                checkOnlineState();
             }
         });
 
@@ -50,8 +50,6 @@ public class StartupActivity extends AppCompatActivity {
 
         dialogHintBuilder.setView(hintAlertView);
         hintAlertDialog = dialogHintBuilder.create();
-
-        checkOnlineState();
     }
 
     @Override

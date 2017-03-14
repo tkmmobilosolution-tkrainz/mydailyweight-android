@@ -31,8 +31,8 @@
     <string name="register">Registrieren</string>
     <string name="logout">Abmelden</string>
     <string name="progress">Fortschritt</string>
-    <string name="gender_male">Mann</string>
-    <string name="gender_female">Frau</string>
+    <string name="gender_male">Männlich</string>
+    <string name="gender_female">Weiblich</string>
     <string name="name">Name</string>
     <string name="age">Alter</string>
     <string name="gender">Geschlecht</string>
@@ -75,4 +75,9 @@
     <string name="progressbar_loading">Lade ...</string>
     <string name="progressbar_sync">Synchronisiere ...</string>
     <string name="progressbar_update_user">Speichere Benutzer ...</string>
+
+    <string name="menu_add">Gewicht eintragen</string>
+    <string name="menu_sync">Synchronisieren</string>
+    <string name="menu_download">Lade Einträge</string>
+    <string name="menu_logout">Abmelden</string>
 </resources>
