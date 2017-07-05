@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog progressDialog = null;
     private TextView hintTitleView, hintMessageView;
     private EditText emailET, passwordET;
+    private boolean facebookLoginFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 trackInteraction("Login", "Button", "login_clicked_facebook");
                 progressDialog.show();
+                facebookLoginFlag = true;
             }
         });
 
@@ -148,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (progressDialog.isShowing()) {
+        if (progressDialog.isShowing() && !facebookLoginFlag) {
             progressDialog.hide();
         }
         authentication.addAuthStateListener(authListener);
@@ -163,6 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                     trackInteraction("Login", "Facebook", "login_facebook_sign_in_success");
                 } else {
                     trackInteraction("Login", "Facebook", "login_facebook_sign_in_failed");
+                    facebookLoginFlag = false;
                 }
             }
         });
@@ -214,6 +217,8 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 setLocalUser(localUser);
             }
+
+            facebookLoginFlag = false;
         }
     }
 

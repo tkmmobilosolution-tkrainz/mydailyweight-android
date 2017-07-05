@@ -185,6 +185,11 @@ public class UserActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
+
     private boolean isStringAvailable(String checkString) {
         return checkString != null && !checkString.isEmpty();
     }

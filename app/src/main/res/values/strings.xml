@@ -13,6 +13,8 @@
     <string name="add_hint">Hint: You already entered your weight today. Try again tomorrow.</string>
     <string name="no_weight_entered">Please enter a weight.</string>
 
+    <string name="notification_alert_title">Enter a notification time.</string>
+
     <string name="add_first_weight">Add your first weight entry</string>
     <string name="add_another_weight">Add your today´s weight</string>
     <string name="add">Add</string>
@@ -59,6 +61,7 @@
     <string name="main_logout_no_sync">Are you sure you want to logout?</string>
     <string name="main_nothing_sync">There is no data to synchronize.</string>
     <string name="main_weight_information">Weight Information</string>
+    <string name="main_sync_button_title">Synchronize and Save</string>
 
     <string name="user_welcome">Please entere here your personal details for your profile.</string>
     <string name="user_button_update">Update profile</string>
@@ -76,6 +79,8 @@
     <string name="progressbar_update_user">Save user ...</string>
 
     <string name="menu_add">Add Weight</string>
+    <string name="menu_progress">Progress</string>
+    <string name="menuSelectTime">Erinnerung</string>
     <string name="menu_sync">Synchronize</string>
     <string name="menu_download">Load Entries</string>
     <string name="menu_logout">Logout</string>

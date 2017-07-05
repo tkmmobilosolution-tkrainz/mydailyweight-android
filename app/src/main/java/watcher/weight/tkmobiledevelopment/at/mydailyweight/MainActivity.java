@@ -1,5 +1,7 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog hintAlertDialog;
     private AlertDialog logoutAlertDialog;
     private AlertDialog downloadAlertDialog;
+    private AlertDialog timeAlertDialog;
 
     private TextView hintTitleView, hintMessageView;
 
@@ -78,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog = null;
 
     private boolean rewardedFinished = false;
+
+    private boolean isLogoutClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoAdOpened() {
-
+                trackInteraction("Main", "Rewarded", "main_sync_opened");
             }
 
             @Override
@@ -126,17 +132,17 @@ public class MainActivity extends AppCompatActivity {
                 rewardedFinished = true;
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-                if (prefs.getBoolean("logoutsync", false)) {
+                if (!isLogoutClicked) {
                     trackInteraction("Main", "Rewarded", "main_sync_logout_success");
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putBoolean("logoutsync", false);
                     editor.apply();
 
                     syncDatabase();
-                    logout();
                 } else {
                     trackInteraction("Main", "Rewarded", "main_sync_success");
                     syncDatabase();
+                    logout();
                 }
             }
 
@@ -159,30 +165,14 @@ public class MainActivity extends AppCompatActivity {
         today = getCurrentDate();
         list = getWeightList();
 
-        list.add(new Weight(82.3, "08.03.17"));
-        list.add(new Weight(82.2, "09.03.17"));
-        list.add(new Weight(82.0, "10.03.17"));
-        list.add(new Weight(81.9, "11.03.17"));
-        list.add(new Weight(82.0, "12.03.17"));
-        list.add(new Weight(81.8, "13.03.17"));
-
-
         infoButton = (Button) findViewById(R.id.infoButton);
-        infoButton.setText(getString(R.string.progress));
-        infoButton.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
+        infoButton.setText(getString(R.string.main_sync_button_title));
+        infoButton.setVisibility(!list.isEmpty() ? View.VISIBLE : View.GONE);
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 trackInteraction("Main", "Button", "main_progress_button");
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                final Gson gson = new Gson();
-                User savedUser = gson.fromJson(pref.getString("USER", null), User.class);
-                double differenceSinceBegin = Double.parseDouble(savedUser.getCurrentWeight()) - list.get(list.size() - 1).weightValue;
-                double differenceToDream = Double.parseDouble(savedUser.getDreamWeight()) - list.get(list.size() - 1).weightValue;
-                String hintText = getString(R.string.main_diff_sinde_begin) + String.format("%.2f", Math.abs(differenceSinceBegin)) + " kg" + "\n\n" +
-                        getString(R.string.main_till_end) + String.format("%.2f", Math.abs(differenceToDream)) + " kg";
-
-                showHintAlertDialog(getString(R.string.main_weight_information), hintText);
+                startSync();
             }
         });
 
@@ -195,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (list.size() == 0 || position == list.size()) {
+                if (list.isEmpty()|| position == list.size()) {
                     trackInteraction("Main", "List", "main_list_add");
                     showAddDialog();
                 }
@@ -285,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+                isLogoutClicked = true;
                 if (sharedPrefs.getBoolean("able_sync", false)) {
                     trackInteraction("Main", "Button", "main_logout_hint_logout_sync_button");
                     SharedPreferences.Editor editor = sharedPrefs.edit();
@@ -328,6 +319,58 @@ public class MainActivity extends AppCompatActivity {
 
         downloadHintBuilder.setView(downloadHintView);
         downloadAlertDialog = downloadHintBuilder.create();
+
+        final AlertDialog.Builder timeHintBuilder = new AlertDialog.Builder(this);
+        View timeHintView = inflater.inflate(R.layout.time_picker_alert, null);
+
+        int hour = PreferenceManager.getDefaultSharedPreferences(this).getInt("timeHour", -1);
+        int minute = PreferenceManager.getDefaultSharedPreferences(this).getInt("timeMinute", -1);
+
+        final TimePicker timePicker = (TimePicker) timeHintView.findViewById(R.id.timePicker);
+
+        if (hour != -1 && minute != -1) {
+            timePicker.setCurrentHour(hour);
+            timePicker.setCurrentMinute(minute);
+        }
+
+        Button timeCancelButton = (Button) timeHintView.findViewById(R.id.tPCancel);
+        timeCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_download_hint_cancel_button");
+                timeAlertDialog.dismiss();
+            }
+        });
+
+        Button timeAddButton = (Button) timeHintView.findViewById(R.id.tPAdd);
+        timeAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "main_download_hint_overwrite_button");
+                int hour = timePicker.getCurrentHour();
+                int minute = timePicker.getCurrentMinute();
+
+                setupAlarmManager(hour, minute);
+
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putInt("timeHour", hour);
+                editor.putInt("timeMinute", minute);
+                editor.commit();
+                editor.apply();
+
+                timeAlertDialog.hide();
+            }
+        });
+
+
+        timeHintBuilder.setView(timeHintView);
+        timeAlertDialog = timeHintBuilder.create();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing.
     }
 
     @Override
@@ -343,20 +386,12 @@ public class MainActivity extends AppCompatActivity {
                 trackInteraction("Main", "Menu", "main_menu_add");
                 showAddDialog();
                 return true;
-            case R.id.sync:
-                trackInteraction("Main", "Menu", "main_menu_sync");
-                progressDialog.setMessage(getString(R.string.progressbar_sync));
-                progressDialog.show();
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-                if (prefs.getBoolean("able_sync", false)) {
-                    trackInteraction("Main", "Sync", "main_sync_start");
-                    rewardedAd.show();
-                } else {
-                    trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
-                    showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_sync));
-                }
-                progressDialog.hide();
+            case R.id.menuProgress:
+                trackInteraction("Main", "Menu", "main_progress");
+                showProgress();
+                return true;
+            case R.id.menuTimePicker:
+                timeAlertDialog.show();
                 return true;
             case R.id.download:
                 trackInteraction("Main", "Menu", "main_menu_download");
@@ -660,5 +695,45 @@ public class MainActivity extends AppCompatActivity {
         hintTitleView.setText(title);
         hintMessageView.setText(message);
         hintAlertDialog.show();
+    }
+
+    private void showProgress() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final Gson gson = new Gson();
+        User savedUser = gson.fromJson(pref.getString("USER", null), User.class);
+        double differenceSinceBegin = Double.parseDouble(savedUser.getCurrentWeight()) - list.get(list.size() - 1).weightValue;
+        double differenceToDream = Double.parseDouble(savedUser.getDreamWeight()) - list.get(list.size() - 1).weightValue;
+        String hintText = getString(R.string.main_diff_sinde_begin) + String.format("%.2f", Math.abs(differenceSinceBegin)) + " kg" + "\n\n" +
+            getString(R.string.main_till_end) + String.format("%.2f", Math.abs(differenceToDream)) + " kg";
+
+        showHintAlertDialog(getString(R.string.main_weight_information), hintText);
+    }
+
+    private void startSync() {
+        progressDialog.setMessage(getString(R.string.progressbar_sync));
+        progressDialog.show();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean("able_sync", false)) {
+            trackInteraction("Main", "Sync", "main_sync_start");
+            rewardedAd.show();
+        } else {
+            trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
+            showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_sync));
+        }
+        progressDialog.hide();
+    }
+
+    private void setupAlarmManager(int hour, int minute) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 7);
+        cal.set(Calendar.MINUTE, 30);
+        cal.set(Calendar.SECOND, 0);
+
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, new Intent(this, AlarmReceiver.class), 0);
+
+        AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
     }
 }
