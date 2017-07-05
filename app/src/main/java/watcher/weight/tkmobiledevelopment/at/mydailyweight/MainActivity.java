@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
         timeCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_download_hint_cancel_button");
+                trackInteraction("Main", "Button", "main_cancel_time");
                 timeAlertDialog.dismiss();
             }
         });
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
         timeAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_download_hint_overwrite_button");
+                trackInteraction("Main", "Button", "main_set_time");
                 int hour = timePicker.getCurrentHour();
                 int minute = timePicker.getCurrentMinute();
 
@@ -391,6 +391,7 @@ public class MainActivity extends AppCompatActivity {
                 showProgress();
                 return true;
             case R.id.menuTimePicker:
+                trackInteraction("Main", "Menu", "main_time_picker");
                 timeAlertDialog.show();
                 return true;
             case R.id.download:

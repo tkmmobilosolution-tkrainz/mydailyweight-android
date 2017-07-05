@@ -7,8 +7,8 @@ android {
         applicationId "watcher.weight.tkmobiledevelopment.at.mydailyweight"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 8
-        versionName "1.2"
+        versionCode 9
+        versionName "1.3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
