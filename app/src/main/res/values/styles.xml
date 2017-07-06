@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/primaryYellow</item>
         <item name="colorPrimaryDark">@color/primaryYellow</item>
         <item name="actionBarPopupTheme">@style/PopupTheme</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="PopupTheme" parent="ThemeOverlay.AppCompat.Light">
@@ -36,5 +38,14 @@
         <item name="android:topBright">@android:color/transparent</item>
         <item name="android:topDark">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

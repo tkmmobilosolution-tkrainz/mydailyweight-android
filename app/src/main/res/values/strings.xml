@@ -84,4 +84,12 @@
     <string name="menu_sync">Synchronize</string>
     <string name="menu_download">Load Entries</string>
     <string name="menu_logout">Logout</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="navigation_drawer_weight_graph">Weight Diagram</string>
+
+
+    <string name="action_settings">Settings</string>
 </resources>

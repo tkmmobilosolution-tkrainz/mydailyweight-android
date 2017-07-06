@@ -8,6 +8,4 @@
         android:title="@string/menuSelectTime" />
     <item android:id="@+id/download"
         android:title="@string/menu_download" />
-    <item android:id="@+id/logout"
-        android:title="@string/menu_logout" />
 </menu>
