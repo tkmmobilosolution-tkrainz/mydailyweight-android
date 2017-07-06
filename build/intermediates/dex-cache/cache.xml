@@ -741,21 +741,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/customtabs/25.3.1/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.1"
-        sha1="807751a24cf96566fd8675517c94d8463cf364db">
-        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.android.support-customtabs-25.3.1_407012fde59f9c7534be3139a63cb8afbca54479.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.3.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.1"
         sha1="95519720620b553f63afc789beba9ad582807f7c">
         <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-25.3.1_09a911bea66f120160e4bf4e55d8bbe6c8fc855f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/customtabs/25.3.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="807751a24cf96566fd8675517c94d8463cf364db">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.android.support-customtabs-25.3.1_407012fde59f9c7534be3139a63cb8afbca54479.jar" />
     </item>
     <item
         is-multidex="false"

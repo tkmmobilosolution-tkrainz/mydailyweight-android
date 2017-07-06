@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import com.facebook.login.LoginManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
 
         navigationView.getMenu().getItem(0).setChecked(true);
+
+        trackInteraction("NavDrawer", "Start", "nav_drawer_start_graph");
     }
 
     @Override
@@ -82,11 +81,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_weight) {
             trackInteraction("NavDrawer", "Item", "nav_drawer_weight_graph_clicked");
             fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
-
-        } else if (id == R.id.nav_damage) {
-
-        } else if (id == R.id.nav_update) {
-
+        } else if (id == R.id.nav_list) {
+            trackInteraction("NavDrawer", "Item", "nac_drawer_weight_list_clicked");
+            fm.beginTransaction().replace(R.id.content_frame, new ListFragment()).commit();
         } else if (id == R.id.nav_logout) {
             trackInteraction("NavDrawer", "Item", "nac_drawer_logout_clicked");
             syncDatabase();
@@ -131,7 +128,8 @@ public class MainActivity extends AppCompatActivity
         }.getType();
         ArrayList<Weight> list = gson.fromJson(json, type);
 
-        FirebaseDatabase.getInstance().getReference().child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+        FirebaseDatabase.getInstance().getReference().child("user_weights")
+            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
             .setValue(list);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putBoolean("able_sync", false);

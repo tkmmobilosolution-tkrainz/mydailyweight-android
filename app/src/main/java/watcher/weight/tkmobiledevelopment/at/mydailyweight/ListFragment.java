@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -18,8 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -46,7 +50,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainFragment extends Fragment {
+/**
+ * Created by tkrainz on 06/07/2017.
+ */
+
+public class ListFragment extends Fragment {
 
     private AlertDialog addAlertDialog;
     private AlertDialog hintAlertDialog;
@@ -59,7 +67,7 @@ public class MainFragment extends Fragment {
 
     private ArrayList<Weight> list = new ArrayList<>();
     private ArrayList<Weight> dbList = new ArrayList<>();
-    private WeightView weightView;
+    private ListView listView;
     private String today;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -77,7 +85,7 @@ public class MainFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        View view = inflater.inflate(R.layout.activity_main, container, false);
+        View view = inflater.inflate(R.layout.list_fragment, container, false);
 
         MobileAds.initialize(getActivity(), getString(R.string.ad_mob_app_id));
         setAdvertisment(view);
@@ -96,7 +104,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onRewardedVideoAdOpened() {
-                trackInteraction("Main", "Rewarded", "main_sync_opened");
+                trackInteraction("List", "Rewarded", "list_sync_opened");
             }
 
             @Override
@@ -107,7 +115,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onRewardedVideoAdClosed() {
                 if (!rewardedFinished) {
-                    trackInteraction("Main", "Rewarded", "main_sync_canceled");
+                    trackInteraction("List", "Rewarded", "list_sync_canceled");
                     loadRewardedVideo();
                     Toast.makeText(getActivity(), getString(R.string.main_sync_failed),
                         Toast.LENGTH_SHORT).show();
@@ -121,7 +129,7 @@ public class MainFragment extends Fragment {
             public void onRewarded(RewardItem rewardItem) {
                 rewardedFinished = true;
 
-                trackInteraction("Main", "Rewarded", "main_sync_success");
+                trackInteraction("List", "Rewarded", "list_sync_success");
                 syncDatabase();
             }
 
@@ -132,7 +140,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int i) {
-                trackInteraction("Main", "Rewarded", "main_rewarded_error_" + i);
+                trackInteraction("List", "Rewarded", "list_rewarded_error_" + i);
                 Log.e("Rewarded error", "" + i);
             }
         });
@@ -150,14 +158,23 @@ public class MainFragment extends Fragment {
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_progress_button");
+                trackInteraction("List", "Button", "list_progress_button");
                 startSync();
             }
         });
 
-        weightView = (WeightView) view.findViewById(R.id.weightView);
-        weightView.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
-        weightView.setWeightArrayList(list);
+        listView = (ListView) view.findViewById(R.id.fragment_listview);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (list.isEmpty() || position == list.size()) {
+                    trackInteraction("List", "List", "list_list_add");
+                    showAddDialog();
+                }
+            }
+        });
+        listView.setDivider(new ColorDrawable(list.size() > 0 ? Color.WHITE : Color.TRANSPARENT));
+        listView.setAdapter(new WeightListAdapter(getActivity(), list));
 
         AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(getActivity());
         View addAlertView = inflater.inflate(R.layout.add_alert, null);
@@ -169,14 +186,14 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (newWeight.getText().toString().equals("")) {
-                    trackInteraction("Main", "Button", "main_add_hint_button_failed");
+                    trackInteraction("List", "Button", "list_add_hint_button_failed");
                     Toast.makeText(getActivity(),
                         getResources().getString(R.string.no_weight_entered), Toast.LENGTH_LONG)
                         .show();
                 } else {
                     progressDialog.setMessage(getString(R.string.progressbar_refresh));
                     progressDialog.show();
-                    trackInteraction("Main", "Button", "main_add_hint_button_success");
+                    trackInteraction("List", "Button", "list_add_hint_button_success");
                     double weight = Double.parseDouble(newWeight.getText().toString());
                     Weight currentWeight = new Weight(weight, today);
                     list.add(currentWeight);
@@ -198,7 +215,7 @@ public class MainFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_add_hint_button_cancel");
+                trackInteraction("List", "Button", "list_add_hint_button_cancel");
                 addAlertDialog.dismiss();
             }
         });
@@ -218,7 +235,7 @@ public class MainFragment extends Fragment {
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_hint_button");
+                trackInteraction("List", "Button", "list_hint_button");
                 hintAlertDialog.dismiss();
             }
         });
@@ -235,7 +252,7 @@ public class MainFragment extends Fragment {
         cancelDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_download_hint_cancel_button");
+                trackInteraction("List", "Button", "list_download_hint_cancel_button");
                 downloadAlertDialog.dismiss();
             }
         });
@@ -245,7 +262,7 @@ public class MainFragment extends Fragment {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_download_hint_overwrite_button");
+                trackInteraction("List", "Button", "list_download_hint_overwrite_button");
                 list = dbList;
                 downloadAlertDialog.hide();
                 refreshLayout(list);
@@ -274,7 +291,7 @@ public class MainFragment extends Fragment {
         timeCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_cancel_time");
+                trackInteraction("List", "Button", "list_cancel_time");
                 timeAlertDialog.dismiss();
             }
         });
@@ -283,7 +300,7 @@ public class MainFragment extends Fragment {
         timeAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_set_time");
+                trackInteraction("List", "Button", "list_set_time");
                 int hour = timePicker.getCurrentHour();
                 int minute = timePicker.getCurrentMinute();
 
@@ -316,19 +333,19 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuAdd:
-                trackInteraction("Main", "Menu", "main_menu_add");
+                trackInteraction("List", "Menu", "list_menu_add");
                 showAddDialog();
                 return true;
             case R.id.menuProgress:
-                trackInteraction("Main", "Menu", "main_progress");
+                trackInteraction("List", "Menu", "list_progress");
                 showProgress();
                 return true;
             case R.id.menuTimePicker:
-                trackInteraction("Main", "Menu", "main_time_picker");
+                trackInteraction("List", "Menu", "list_time_picker");
                 timeAlertDialog.show();
                 return true;
             case R.id.download:
-                trackInteraction("Main", "Menu", "main_menu_download");
+                trackInteraction("List", "Menu", "list_menu_download");
                 progressDialog.setMessage(getString(R.string.progressbar_loading));
                 progressDialog.show();
                 final DatabaseReference database = FirebaseDatabase.getInstance().getReference()
@@ -344,19 +361,19 @@ public class MainFragment extends Fragment {
                         if (dbList != null) {
 
                             if (list.size() > dbList.size()) {
-                                trackInteraction("Main", "Download", "main_download_overwrite");
+                                trackInteraction("List", "Download", "list_download_overwrite");
                                 downloadAlertDialog.show();
                             } else if (dbList.size() == list.size()) {
-                                trackInteraction("Main", "Download", "main_download_up_to_date");
+                                trackInteraction("List", "Download", "list_download_up_to_date");
                                 showHintAlertDialog(getString(R.string.hint),
                                     getString(R.string.main_nothing_download));
                             } else {
-                                trackInteraction("Main", "Download", "main_download_success");
+                                trackInteraction("List", "Download", "list_download_success");
                                 list = dbList;
                                 refreshLayout(list);
                             }
                         } else {
-                            trackInteraction("Main", "Download", "main_download_no_data_available");
+                            trackInteraction("List", "Download", "list_download_no_data_available");
                             showHintAlertDialog(getString(R.string.hint),
                                 getString(R.string.main_nothing_download));
                         }
@@ -367,7 +384,7 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         //showHintAlertDialog("Error", "A server error occored. Try again later.");
-                        trackInteraction("Main", "Download", "main_download_error");
+                        trackInteraction("List", "Download", "list_download_error");
                         progressDialog.hide();
                     }
                 });
@@ -378,12 +395,14 @@ public class MainFragment extends Fragment {
     }
 
     private void refreshLayout(ArrayList<Weight> list) {
-        trackInteraction("Main", "List", "main_list_refresh");
+        trackInteraction("List", "List", "list_list_refresh");
         saveList(list);
-        weightView.setWeightArrayList(list);
-        weightView.setVisibility(list.size() != 0 ? View.VISIBLE : View.GONE);
-        weightView.invalidate();
         infoButton.setVisibility(list.size() != 0 ? View.VISIBLE : View.GONE);
+        listView.setDivider(new ColorDrawable(Color.WHITE));
+        listView.setDividerHeight(1);
+        listView.setAdapter(new WeightListAdapter(getActivity(), list));
+        listView.setSelection(list.size() - 1);
+        listView.invalidateViews();
 
         if (list.size() % 5 == 0) {
 
@@ -391,7 +410,7 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
-                    trackInteraction("Main", "Interstitial", "main_interstitial_Closed");
+                    trackInteraction("List", "Interstitial", "list_interstitial_Closed");
                 }
 
                 @Override
@@ -399,42 +418,42 @@ public class MainFragment extends Fragment {
                     super.onAdFailedToLoad(i);
                     switch (i) {
                         case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                            trackInteraction("Main", "Interstitial",
-                                "main_interstitial_Internal_Error");
+                            trackInteraction("List", "Interstitial",
+                                "list_interstitial_Internal_Error");
                             break;
                         case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                            trackInteraction("Main", "Interstitial",
-                                "Interstitial_Invalid_Request");
+                            trackInteraction("List", "Interstitial",
+                                "list_interstitial_Invalid_Request");
                             break;
                         case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                            trackInteraction("Main", "Interstitial",
-                                "main_interstitial_Network_Error");
+                            trackInteraction("List", "Interstitial",
+                                "list_interstitial_Network_Error");
                             break;
                         case AdRequest.ERROR_CODE_NO_FILL:
-                            trackInteraction("Main", "Interstitial", "main_interstitial_No_Ad");
+                            trackInteraction("List", "Interstitial", "list_interstitial_No_Ad");
                             break;
                         default:
-                            trackInteraction("Main", "Interstitial",
-                                "main_interstitial_Failed_Default");
+                            trackInteraction("List", "Interstitial",
+                                "list_interstitial_Failed_Default");
                     }
                 }
 
                 @Override
                 public void onAdLeftApplication() {
                     super.onAdLeftApplication();
-                    trackInteraction("Main", "Interstitial", "main_interstitial_Left");
+                    trackInteraction("List", "Interstitial", "list_interstitial_Left");
                 }
 
                 @Override
                 public void onAdOpened() {
                     super.onAdOpened();
-                    trackInteraction("Main", "Interstitial", "main_interstitial_Opened");
+                    trackInteraction("List", "Interstitial", "list_interstitial_Opened");
                 }
 
                 @Override
                 public void onAdLoaded() {
                     super.onAdLoaded();
-                    trackInteraction("Main", "Interstitial", "main_interstitial_Loaded");
+                    trackInteraction("List", "Interstitial", "list_interstitial_Loaded");
                 }
             });
 
@@ -446,13 +465,13 @@ public class MainFragment extends Fragment {
 
     private void showAddDialog() {
         if (list.size() == 0) {
-            trackInteraction("Main", "Add", "main_weight_first");
+            trackInteraction("List", "Add", "list_weight_first");
             addAlertDialog.show();
         } else if (list.get(list.size() - 1).date.equals(today)) {
-            trackInteraction("Main", "Add", "main_weight_tomorrow");
+            trackInteraction("List", "Add", "list_weight_tomorrow");
             showHintAlertDialog(getString(R.string.hint), getString(R.string.add_hint));
         } else {
-            trackInteraction("Main", "Add", "main_weight_more");
+            trackInteraction("List", "Add", "list_weight_more");
             addAlertDialog.show();
         }
     }
@@ -470,7 +489,7 @@ public class MainFragment extends Fragment {
     }
 
     private ArrayList<Weight> getWeightList() {
-        trackInteraction("Main", "List", "main_list_get");
+        trackInteraction("List", "List", "list_list_get");
         SharedPreferences sharedPrefs = PreferenceManager
             .getDefaultSharedPreferences(getActivity());
         Gson gson = new Gson();
@@ -480,7 +499,7 @@ public class MainFragment extends Fragment {
         ArrayList<Weight> l = gson.fromJson(json, type);
 
         if (l == null) {
-            trackInteraction("Main", "List", "main_list_download");
+            trackInteraction("List", "List", "list_list_download");
             final DatabaseReference database = FirebaseDatabase.getInstance().getReference()
                 .child("user_weights").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
             database.addValueEventListener(new ValueEventListener() {
@@ -491,16 +510,16 @@ public class MainFragment extends Fragment {
                     dbList = dataSnapshot.getValue(arrayList);
 
                     if (dbList != null) {
-                        trackInteraction("Main", "List", "main_list_db_list");
+                        trackInteraction("List", "List", "list_list_db_list");
                         refreshLayout(dbList);
                     } else {
-                        trackInteraction("Main", "List", "main_list_empty");
+                        trackInteraction("List", "List", "list_list_empty");
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    trackInteraction("Main", "List", "main_list_default_error");
+                    trackInteraction("List", "List", "list_list_default_error");
                     progressDialog.hide();
                 }
             });
@@ -526,13 +545,13 @@ public class MainFragment extends Fragment {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                trackInteraction("Main", "Banner", "main_banner_Closed");
+                trackInteraction("List", "Banner", "list_banner_Closed");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                trackInteraction("Main", "Banner", "main_banner_Loaded");
+                trackInteraction("List", "Banner", "list_banner_Loaded");
             }
 
             @Override
@@ -540,32 +559,32 @@ public class MainFragment extends Fragment {
                 super.onAdFailedToLoad(i);
                 switch (i) {
                     case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                        trackInteraction("Main", "Banner", "main_banner_Internal_Error");
+                        trackInteraction("List", "Banner", "list_banner_Internal_Error");
                         break;
                     case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                        trackInteraction("Main", "Banner", "main_banner_Invalid_Request");
+                        trackInteraction("List", "Banner", "list-banner_Invalid_Request");
                         break;
                     case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                        trackInteraction("Main", "Banner", "main_banner_Network_Error");
+                        trackInteraction("List", "Banner", "list-banner_Network_Error");
                         break;
                     case AdRequest.ERROR_CODE_NO_FILL:
-                        trackInteraction("Main", "Banner", "main_banner_No_Ad");
+                        trackInteraction("List", "Banner", "list-banner_No_Ad");
                         break;
                     default:
-                        trackInteraction("Main", "Banner", "main_banner_Failed_Default");
+                        trackInteraction("List", "Banner", "list-banner_Failed_Default");
                 }
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                trackInteraction("Main", "Banner", "main_banner_Opened");
+                trackInteraction("List", "Banner", "list-banner_Opened");
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                trackInteraction("Main", "Banner", "main_banner_Left");
+                trackInteraction("List", "Banner", "list-banner_Left");
             }
         });
     }
@@ -601,7 +620,7 @@ public class MainFragment extends Fragment {
     }
 
     private void showHintAlertDialog(String title, String message) {
-        trackInteraction("Main", "Hint", "main_show_hint");
+        trackInteraction("List", "Hint", "list_show_hint");
         if (progressDialog.isShowing()) {
             progressDialog.hide();
         }
@@ -633,10 +652,10 @@ public class MainFragment extends Fragment {
             .getDefaultSharedPreferences(getActivity());
 
         if (prefs.getBoolean("able_sync", false)) {
-            trackInteraction("Main", "Sync", "main_sync_start");
+            trackInteraction("List", "Sync", "list_sync_start");
             rewardedAd.show();
         } else {
-            trackInteraction("Main", "Sync", "main_sync_nothing_to_sync");
+            trackInteraction("List", "Sync", "list_sync_nothing_to_sync");
             showHintAlertDialog(getString(R.string.hint), getString(R.string.main_nothing_sync));
         }
         progressDialog.hide();

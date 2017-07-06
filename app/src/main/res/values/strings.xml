@@ -89,7 +89,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="navigation_drawer_weight_graph">Weight Diagram</string>
+    <string name="navigation_drawer_weight_list">Weight List</string>
 
+    <string name="navigation_drawer_overview">Overview</string>
+
+    <string name="navigation_drawer_profile">Profile</string>
 
     <string name="action_settings">Settings</string>
 </resources>

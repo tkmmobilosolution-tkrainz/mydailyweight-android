@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primaryGray"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/primaryGray"
-    tools:context="watcher.weight.tkmobiledevelopment.at.mydailyweight.MainActivity">
-
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <Button
         android:text="Progress"
@@ -23,13 +19,17 @@
         android:layout_marginBottom="8dp"
         android:id="@+id/infoButton" />
 
-    <watcher.weight.tkmobiledevelopment.at.mydailyweight.WeightView
-        android:id="@+id/weightView"
+    <ListView
+        android:id="@+id/fragment_listview"
         android:layout_width="match_parent"
-        android:layout_below="@id/infoButton"
-        android:layout_height="220dp"
-        />
-
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:layout_above="@+id/adView"
+        android:layout_below="@+id/infoButton"
+        android:divider="@android:color/white"
+        android:dividerHeight="1dp" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
@@ -39,5 +39,4 @@
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>
-
 </RelativeLayout>
