@@ -329,10 +329,6 @@ public class MainFragment extends Fragment {
                 trackInteraction("Main", "Menu", "main_menu_add");
                 showAddDialog();
                 return true;
-            case R.id.menuProgress:
-                trackInteraction("Main", "Menu", "main_progress");
-                showProgress();
-                return true;
             case R.id.menuTimePicker:
                 trackInteraction("Main", "Menu", "main_time_picker");
                 timeAlertDialog.show();

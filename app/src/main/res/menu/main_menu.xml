@@ -2,8 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menuAdd"
         android:title="@string/menu_add" android:checked="true"/>
-    <item android:id="@+id/menuProgress"
-        android:title="@string/menu_progress"/>
     <item android:id="@+id/menuTimePicker"
         android:title="@string/menuSelectTime" />
     <item android:id="@+id/download"

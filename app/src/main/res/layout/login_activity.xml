@@ -23,28 +23,30 @@
         android:id="@+id/welcomeLoginView" />
 
     <EditText
+        android:id="@+id/loginEmail"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:inputType="textEmailAddress"
-        android:background="@color/white"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="20dp"
+        android:paddingLeft="5dp"
+        android:background="@color/white"
         android:hint="@string/email"
-        android:id="@+id/loginEmail" />
+        android:inputType="textEmailAddress"
+        android:textSize="20dp" />
 
     <EditText
+        android:id="@+id/loginPassword"
         android:layout_width="match_parent"
         android:layout_height="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:inputType="textPassword"
+        android:paddingLeft="5dp"
         android:background="@color/white"
-        android:textSize="20dp"
         android:hint="@string/password"
-        android:id="@+id/loginPassword" />
+        android:inputType="textPassword"
+        android:textSize="20dp" />
 
     <Button
         android:text="@string/login_sign_in"

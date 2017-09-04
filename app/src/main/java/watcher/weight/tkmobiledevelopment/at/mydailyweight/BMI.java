@@ -9,7 +9,7 @@ public class BMI {
     String date = "";
     double bmi = 0;
     double weight = 0;
-    String weightGroup = "";
+    int weightGroup = 0;
 
     public String getDate() {
         return date;
@@ -35,11 +35,11 @@ public class BMI {
         this.weight = weight;
     }
 
-    public String getWeightGroup() {
+    public int getWeightGroup() {
         return weightGroup;
     }
 
-    public void setWeightGroup(String weightGroup) {
+    public void setWeightGroup(int weightGroup) {
         this.weightGroup = weightGroup;
     }
 }

@@ -1,29 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:text="@string/date"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dateTextView"
-        android:layout_weight="1"
-        android:textColor="@color/primaryYellow"
-        android:textSize="20sp"
-        android:textAlignment="viewStart"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:text="@string/weight"
-        android:layout_width="wrap_content"
+
+        <TextView
+            android:text="@string/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dateTextView"
+            android:layout_weight="1"
+            android:textColor="@color/primaryYellow"
+            android:textSize="20sp"
+            android:textAlignment="viewStart"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:text="@string/weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/weightTextView"
+            android:layout_weight="1"
+            android:textColor="@color/primaryYellow"
+            android:textSize="20sp"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/weightTextView"
-        android:layout_weight="1"
-        android:textColor="@color/primaryYellow"
-        android:textSize="20sp"
-        android:textAlignment="textEnd"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:text="@string/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvBmi"
+            android:layout_weight="1"
+            android:textColor="@color/primaryYellow"
+            android:textSize="14sp"
+            android:textAlignment="viewStart"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:text="@string/weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDiffernece"
+            android:layout_weight="1"
+            android:textColor="@color/primaryYellow"
+            android:textSize="14sp"
+            android:textAlignment="textEnd"
+            android:layout_marginBottom="8dp"/>
+    </LinearLayout>
+
 </LinearLayout>

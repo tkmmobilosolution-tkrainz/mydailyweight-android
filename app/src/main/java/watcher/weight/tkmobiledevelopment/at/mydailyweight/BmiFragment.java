@@ -48,9 +48,7 @@ public class BmiFragment extends Fragment {
 
         getProfile();
         list = getWeightList();
-        list.add(new Weight(88.0, "01.09.2017"));
-        list.add(new Weight(87.8, "02.09.2017"));
-        list.add(new Weight(82.5, "03.09.2017"));
+
 
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {
@@ -60,7 +58,7 @@ public class BmiFragment extends Fragment {
 
         if (!bmiList.isEmpty()) {
             listView = (ListView) view.findViewById(R.id.bmiList);
-            listView.setDivider(new ColorDrawable(Color.WHITE));
+            listView.setDivider(new ColorDrawable(getResources().getColor(R.color.primaryYellow)));
             listView.setDividerHeight(1);
             listView.setAdapter(new BmiListAdapter(getActivity(), bmiList));
         }
@@ -109,7 +107,7 @@ public class BmiFragment extends Fragment {
         currentBmi.setDate(currentWeight.date);
         currentBmi.setBmi(bmi);
         currentBmi.setWeight(currentWeight.weightValue);
-        currentBmi.setWeightGroup(weightGroup);
+        currentBmi.setWeightGroup(bmiGroup);
 
         bmiList.add(currentBmi);
     }

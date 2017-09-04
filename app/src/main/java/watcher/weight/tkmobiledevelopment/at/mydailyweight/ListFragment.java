@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -60,13 +61,16 @@ public class ListFragment extends Fragment {
     private AlertDialog hintAlertDialog;
     private AlertDialog downloadAlertDialog;
     private AlertDialog timeAlertDialog;
+    private AlertDialog progressWeightDialog;
 
-    private TextView hintTitleView, hintMessageView;
+    private TextView hintTitleView, hintMessageView, bmiDetail, weightDetail, progressTitle;
 
     private Button infoButton;
 
     private ArrayList<Weight> list = new ArrayList<>();
     private ArrayList<Weight> dbList = new ArrayList<>();
+    private ArrayList<BMI> bmiList = new ArrayList<>();
+
     private ListView listView;
     private String today;
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -80,6 +84,8 @@ public class ListFragment extends Fragment {
 
     private boolean rewardedFinished = false;
 
+    private User user;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -88,6 +94,7 @@ public class ListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         analytics = FirebaseAnalytics.getInstance(getActivity());
+        getProfile();
 
         View view = inflater.inflate(R.layout.list_fragment, container, false);
 
@@ -155,6 +162,7 @@ public class ListFragment extends Fragment {
 
         today = getCurrentDate();
         list = getWeightList();
+        bmiList = calculateBMI(list);
 
         infoButton = (Button) view.findViewById(R.id.infoButton);
         infoButton.setText(getString(R.string.main_sync_button_title));
@@ -174,11 +182,16 @@ public class ListFragment extends Fragment {
                 if (list.isEmpty() || position == list.size()) {
                     trackInteraction("List", "List", "list_list_add");
                     showAddDialog();
+                } else {
+                    trackInteraction("List", "List", "open_progress");
+                    showProgressDialog(list.get(position).weightValue, bmiList.get(position).bmi,
+                        bmiList.get(position).weightGroup);
                 }
             }
         });
         listView.setDivider(new ColorDrawable(list.size() > 0 ? Color.WHITE : Color.TRANSPARENT));
-        listView.setAdapter(new WeightListAdapter(getActivity(), list));
+        listView.setAdapter(new WeightListAdapter(getActivity(), list, bmiList,
+            Double.parseDouble(user.getCurrentWeight())));
 
         AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(getActivity());
         View addAlertView = inflater.inflate(R.layout.add_alert, null);
@@ -276,6 +289,26 @@ public class ListFragment extends Fragment {
         downloadHintBuilder.setView(downloadHintView);
         downloadAlertDialog = downloadHintBuilder.create();
 
+        final AlertDialog.Builder bmiHintBuilder = new AlertDialog.Builder(getActivity());
+        View bmiHintView = inflater.inflate(R.layout.list_progress, null);
+
+        bmiDetail = (TextView) bmiHintView.findViewById(R.id.tvProgressBmi);
+        weightDetail = (TextView) bmiHintView.findViewById(R.id.tvProgressWeight);
+        progressTitle = (TextView) bmiHintView.findViewById(R.id.tvProgressTitle);
+        progressTitle.setText("Fortschritts Information");
+
+        Button bmiProgressButton = (Button) bmiHintView.findViewById(R.id.btnProgressOk);
+        bmiProgressButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Button", "List", "progress_ok");
+                progressWeightDialog.dismiss();
+            }
+        });
+
+        bmiHintBuilder.setView(bmiHintView);
+        progressWeightDialog = bmiHintBuilder.create();
+
         final AlertDialog.Builder timeHintBuilder = new AlertDialog.Builder(getActivity());
         View timeHintView = inflater.inflate(R.layout.time_picker_alert, null);
 
@@ -340,10 +373,6 @@ public class ListFragment extends Fragment {
                 trackInteraction("List", "Menu", "list_menu_add");
                 showAddDialog();
                 return true;
-            case R.id.menuProgress:
-                trackInteraction("List", "Menu", "list_progress");
-                showProgress();
-                return true;
             case R.id.menuTimePicker:
                 trackInteraction("List", "Menu", "list_time_picker");
                 timeAlertDialog.show();
@@ -401,10 +430,13 @@ public class ListFragment extends Fragment {
     private void refreshLayout(ArrayList<Weight> list) {
         trackInteraction("List", "List", "list_list_refresh");
         saveList(list);
+        bmiList = calculateBMI(list);
+
         infoButton.setVisibility(list.size() != 0 ? View.VISIBLE : View.GONE);
         listView.setDivider(new ColorDrawable(Color.WHITE));
         listView.setDividerHeight(1);
-        listView.setAdapter(new WeightListAdapter(getActivity(), list));
+        listView.setAdapter(new WeightListAdapter(getActivity(), list, bmiList,
+            Double.parseDouble(user.getCurrentWeight())));
         listView.setSelection(list.size() - 1);
         listView.invalidateViews();
 
@@ -681,5 +713,233 @@ public class ListFragment extends Fragment {
         manager
             .setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
                 pi);
+    }
+
+    private void getProfile() {
+        SharedPreferences sharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(getActivity());
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString("USER", null);
+        user = gson.fromJson(json, User.class);
+
+        if (user == null) {
+            final DatabaseReference database = FirebaseDatabase.getInstance().getReference()
+                .child("user_profile")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    user = (User) dataSnapshot.getValue();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private ArrayList<BMI> calculateBMI(ArrayList<Weight> list) {
+
+        ArrayList<BMI> newBMI = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            Weight currentWeight = list.get(i);
+
+            int age = Integer.parseInt(user.getAge());
+            String gender = user.getGender();
+            boolean male = gender.equals("Male");
+            double height = Double.parseDouble(user.getHeight()) / 100;
+            double bmiHeight = height * height;
+
+            double bmi = currentWeight.weightValue / bmiHeight;
+            int ageGroup = ageGroup(age);
+            int bmiGroup = male ? bmiGroupMale(ageGroup, bmi) : bmiGroupFemale(ageGroup, bmi);
+
+            BMI currentBmi = new BMI();
+            currentBmi.setDate(currentWeight.date);
+            currentBmi.setBmi(bmi);
+            currentBmi.setWeight(currentWeight.weightValue);
+            currentBmi.setWeightGroup(bmiGroup);
+
+            newBMI.add(currentBmi);
+        }
+
+        return newBMI;
+    }
+
+    private int ageGroup(int age) {
+        if (age <= 24) {
+            return 1;
+        } else if (age > 24 && age <= 34) {
+            return 2;
+        } else if (age > 34 && age <= 44) {
+            return 3;
+        } else if (age > 44 && age <= 54) {
+            return 4;
+        } else if (age > 54 && age <= 64) {
+            return 5;
+        } else if (age > 64) {
+            return 6;
+        }
+
+        return 0;
+    }
+
+    private int bmiGroupMale(int ageGroup, double bmi) {
+        switch (ageGroup) {
+            case 1:
+                if (bmi >= 19 && bmi <= 24) {
+                    return 2;
+                } else if (bmi < 19) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 2:
+                if (bmi >= 20 && bmi <= 25) {
+                    return 2;
+                } else if (bmi < 20) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 3:
+                if (bmi >= 21 && bmi <= 26) {
+                    return 2;
+                } else if (bmi < 21) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 4:
+                if (bmi >= 22 && bmi <= 27) {
+                    return 2;
+                } else if (bmi < 22) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 5:
+                if (bmi >= 23 && bmi <= 28) {
+                    return 2;
+                } else if (bmi < 23) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 6:
+                if (bmi >= 24 && bmi <= 29) {
+                    return 2;
+                } else if (bmi < 24) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            default:
+                return 0;
+        }
+    }
+
+    private int bmiGroupFemale(int ageGroup, double bmi) {
+        switch (ageGroup) {
+            case 1:
+                if (bmi >= 18 && bmi <= 23) {
+                    return 2;
+                } else if (bmi < 18) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 2:
+                if (bmi >= 19 && bmi <= 24) {
+                    return 2;
+                } else if (bmi < 19) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 3:
+                if (bmi >= 20 && bmi <= 25) {
+                    return 2;
+                } else if (bmi < 20) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 4:
+                if (bmi >= 21 && bmi <= 26) {
+                    return 2;
+                } else if (bmi < 21) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 5:
+                if (bmi >= 22 && bmi <= 27) {
+                    return 2;
+                } else if (bmi < 22) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            case 6:
+                if (bmi >= 23 && bmi <= 28) {
+                    return 2;
+                } else if (bmi < 23) {
+                    return 1;
+                } else {
+                    return 3;
+                }
+            default:
+                return 0;
+        }
+    }
+
+    private String weightGroup(int bmiGroup) {
+        switch (bmiGroup) {
+            case 1:
+                return "untergewichtig";
+            case 2:
+                return "normalgewichtig";
+            case 3:
+                return "übergewichtig";
+        }
+
+        return "";
+    }
+
+    private void showProgressDialog(double weight, double bmi, int bmiGroup) {
+        String weightGroup = weightGroup(bmiGroup);
+
+        double differnece = Double.parseDouble(user.getCurrentWeight()) - weight;
+        String difString = "";
+        if (weight > Double.parseDouble(user.getCurrentWeight())) {
+            difString = "Du hast seit deinem Beginn " + String.format("%.2f", differnece)
+                + "kg zugenommen.";
+        } else if (weight < Double.parseDouble(user.getCurrentWeight())) {
+            difString = "Du hast seit deinem Beginn " + String.format("%.2f", differnece)
+                + "kg abgenommen.";
+        }
+
+        String dreamWeightString = "";
+        if (weight <= Double.parseDouble(user.getDreamWeight())) {
+            dreamWeightString = "Du hast dien Traumgewicht erreicht.";
+        } else {
+            double dreamWeightDif = weight - Double.parseDouble(user.getDreamWeight());
+            dreamWeightString =
+                "Zu deinem Traumgewicht fehlen dir noch " + String.format("%.2f", dreamWeightDif)
+                    + "kg.";
+        }
+
+        weightDetail.setText(difString + "\n" + dreamWeightString);
+
+        String bmiString = "Dein momentaner BMI beträgt " + String.format("%.2f", bmi) + ". ";
+        String weightGroupString = "Das bedeutet, dass du " + weightGroup + " bist.";
+
+        bmiDetail.setText(bmiString + weightGroupString);
+
+        progressWeightDialog.show();
     }
 }

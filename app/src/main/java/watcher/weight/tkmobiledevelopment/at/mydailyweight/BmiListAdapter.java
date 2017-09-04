@@ -61,7 +61,7 @@ public class BmiListAdapter extends BaseAdapter {
                 }
 
                 if (bmiTextView != null) {
-                    bmiTextView.setText("BMI: " + " " + currentWeightItem.bmi);
+                    bmiTextView.setText("BMI: " + " " + String.format("%.2f", currentWeightItem.bmi));
                 }
 
                 if (weightGroupTextView != null) {

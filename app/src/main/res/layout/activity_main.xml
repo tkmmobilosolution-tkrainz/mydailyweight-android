@@ -21,6 +21,8 @@
         android:background="@color/primaryYellow"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:id="@+id/infoButton" />
 
     <watcher.weight.tkmobiledevelopment.at.mydailyweight.WeightView
