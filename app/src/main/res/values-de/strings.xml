@@ -63,6 +63,7 @@
     <string name="main_nothing_sync">Es gibt keine Daten zum Synchronisieren.</string>
     <string name="main_weight_information">Gewichts Information</string>
     <string name="main_sync_button_title">Synchronisieren und Speichern</string>
+    <string name="main_button_first_weight">Gewicht eintragen</string>
 
 
     <string name="user_welcome">Gib hier bitte deine persöhnlichen Informationen für dein Profil an.</string>

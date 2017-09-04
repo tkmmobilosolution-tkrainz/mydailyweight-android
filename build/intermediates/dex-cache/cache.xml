@@ -399,6 +399,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/tkrainz/.gradle/caches/modules-2/files-2.1/com.google.zxing/core/3.3.0/73c49077166faa4c3c0059c5f583d1d7bd1475fe/core-3.3.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="73c49077166faa4c3c0059c5f583d1d7bd1475fe">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/core-3.3.0_61ee65c92bb5a070b7343693dd53feafa34180c7.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/tkrainz/Library/Android/sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
         jumboMode="false"
         optimize="true"
@@ -549,6 +558,15 @@
         revision="24.0.1"
         sha1="98476622f10715998eacf9240d6b479f12c66143">
         <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/release/okio-1.6.0_91bace036a53c160b77284f5b0c8ddc83177af09.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.26.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="e09663005d70dcedff0bb77211b9ac52d8b69421">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.facebook.android-facebook-android-sdk-4.26.0_dbb673affe07cd0ef2042060773cbb18c9bf255a.jar" />
     </item>
     <item
         is-multidex="false"
@@ -741,21 +759,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.3.1/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.1"
-        sha1="95519720620b553f63afc789beba9ad582807f7c">
-        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-25.3.1_09a911bea66f120160e4bf4e55d8bbe6c8fc855f.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/customtabs/25.3.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="24.0.1"
         sha1="807751a24cf96566fd8675517c94d8463cf364db">
         <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.android.support-customtabs-25.3.1_407012fde59f9c7534be3139a63cb8afbca54479.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.3.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-25.3.1_09a911bea66f120160e4bf4e55d8bbe6c8fc855f.jar" />
     </item>
     <item
         is-multidex="false"
@@ -792,6 +810,15 @@
         revision="24.0.1"
         sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
         <dex dex="/Users/tkrainz/Documents/MyDailyWeight/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.2.1_b480f14550fdfdb618b51c160a620b60f77a4894/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.25.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="24.0.1"
+        sha1="474cccf169297d49fff89fd35b7634a7a9d1031c">
+        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/release/com.facebook.android-facebook-android-sdk-4.25.0_ef43eed7325a0d092993f55facb095919c77d4b0.jar" />
     </item>
     <item
         is-multidex="false"
@@ -1044,15 +1071,6 @@
         revision="24.0.1"
         sha1="25438f55fc6d906a0e72f30b21487541430ede43">
         <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/release/com.google.android.gms-play-services-base-10.0.1_e8573b63919d2b4c8786d09dbede4b0c0bbc889a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.24.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.1"
-        sha1="0e0e8918eb74e3ee9e82eef6430a4359b2b577d3">
-        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/debug/com.facebook.android-facebook-android-sdk-4.24.0_c2b5eb244535bc937f23f5a7bcbf42a9b161b032.jar" />
     </item>
     <item
         is-multidex="true"

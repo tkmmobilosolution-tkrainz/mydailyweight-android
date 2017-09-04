@@ -68,6 +68,8 @@ public class MainFragment extends Fragment {
 
     private ProgressDialog progressDialog = null;
 
+    private FirebaseAnalytics analytics = null;
+
     private boolean rewardedFinished = false;
 
     @Nullable
@@ -76,6 +78,8 @@ public class MainFragment extends Fragment {
         Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
+
+        analytics = FirebaseAnalytics.getInstance(getActivity());
 
         View view = inflater.inflate(R.layout.activity_main, container, false);
 
@@ -144,14 +148,20 @@ public class MainFragment extends Fragment {
         today = getCurrentDate();
         list = getWeightList();
 
+        String infoButtonString = list.isEmpty() ? getString(R.string.main_button_first_weight) : getString(R.string.main_sync_button_title);
         infoButton = (Button) view.findViewById(R.id.infoButton);
-        infoButton.setText(getString(R.string.main_sync_button_title));
-        infoButton.setVisibility(!list.isEmpty() ? View.VISIBLE : View.GONE);
+        infoButton.setText(infoButtonString);
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Main", "Button", "main_progress_button");
-                startSync();
+
+                if (list.isEmpty()) {
+                    trackInteraction("Main", "Button", "main_button_first_weight");
+                    showAddDialog();
+                } else {
+                    trackInteraction("Main", "Button", "main_progress_button");
+                    startSync();
+                }
             }
         });
 
@@ -571,11 +581,12 @@ public class MainFragment extends Fragment {
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getActivity());
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
 
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 
     private void requestNewInterstitial() {

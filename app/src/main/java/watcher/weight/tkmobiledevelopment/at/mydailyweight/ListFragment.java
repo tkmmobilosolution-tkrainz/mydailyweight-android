@@ -76,6 +76,8 @@ public class ListFragment extends Fragment {
 
     private ProgressDialog progressDialog = null;
 
+    private FirebaseAnalytics analytics = null;
+
     private boolean rewardedFinished = false;
 
     @Nullable
@@ -84,6 +86,8 @@ public class ListFragment extends Fragment {
         Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
+
+        analytics = FirebaseAnalytics.getInstance(getActivity());
 
         View view = inflater.inflate(R.layout.list_fragment, container, false);
 
@@ -590,11 +594,12 @@ public class ListFragment extends Fragment {
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(getActivity());
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
 
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 
     private void requestNewInterstitial() {

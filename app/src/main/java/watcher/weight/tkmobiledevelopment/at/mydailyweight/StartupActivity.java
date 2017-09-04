@@ -1,9 +1,7 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -13,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.facebook.login.LoginManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,14 +21,19 @@ import com.google.firebase.auth.FirebaseAuth;
 public class StartupActivity extends AppCompatActivity {
 
     private AlertDialog hintAlertDialog;
+    private FirebaseAnalytics analytics = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        analytics = FirebaseAnalytics.getInstance(this);
+
         LayoutInflater inflater = this.getLayoutInflater();
         final AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(StartupActivity.this);
         final View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
-        final TextView hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
+        final TextView hintTitleView = (TextView) hintAlertView
+            .findViewById(R.id.hintTitleTextView);
         final TextView hintView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
         final Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
         hintButton.setText(getString(R.string.try_again));
@@ -67,7 +68,7 @@ public class StartupActivity extends AppCompatActivity {
     public boolean isOnline() {
         trackInteraction("Startup", "User", "startup_check_network_connection");
         ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
@@ -92,9 +93,11 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
+
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 }

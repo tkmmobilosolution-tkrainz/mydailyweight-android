@@ -1,11 +1,8 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -53,11 +49,14 @@ public class LoginActivity extends AppCompatActivity {
     private TextView hintTitleView, hintMessageView;
     private EditText emailET, passwordET;
     private boolean facebookLoginFlag = false;
+    private FirebaseAnalytics analytics = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        analytics = FirebaseAnalytics.getInstance(this);
 
         emailET = (EditText) findViewById(R.id.loginEmail);
         passwordET = (EditText) findViewById(R.id.loginPassword);
@@ -158,17 +157,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        authentication.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    trackInteraction("Login", "Facebook", "login_facebook_sign_in_success");
-                } else {
-                    trackInteraction("Login", "Facebook", "login_facebook_sign_in_failed");
-                    facebookLoginFlag = false;
+        authentication.signInWithCredential(credential)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        trackInteraction("Login", "Facebook", "login_facebook_sign_in_success");
+                    } else {
+                        trackInteraction("Login", "Facebook", "login_facebook_sign_in_failed");
+                        facebookLoginFlag = false;
+                    }
                 }
-            }
-        });
+            });
     }
 
     private boolean passwordFormat(String password) {
@@ -187,23 +187,25 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordET.getText().toString();
 
         if (emailFormat(email) && passwordFormat(password)) {
-            authentication.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
+            authentication.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (!task.isSuccessful()) {
-                        signInFailed(task);
-                    } else {
-                        trackInteraction("Login", "Sign in", "login_sign_in_success");
+                        if (!task.isSuccessful()) {
+                            signInFailed(task);
+                        } else {
+                            trackInteraction("Login", "Sign in", "login_sign_in_success");
+                        }
                     }
-                }
-            });
+                });
         } else if (!emailFormat(email)) {
             trackInteraction("Login", "Hint", "login_email_format");
             showHintAlertDialog(getString(R.string.hint), getString(R.string.email_worng_format));
         } else if (!passwordFormat(password)) {
             trackInteraction("Login", "Hint", "login_password_format");
-            showHintAlertDialog(getString(R.string.hint), getString(R.string.password_worng_format));
+            showHintAlertDialog(getString(R.string.hint),
+                getString(R.string.password_worng_format));
         }
     }
 
@@ -224,7 +226,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleDatabaseUser(FirebaseUser user) {
         final Gson gson = new Gson();
-        final DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("user_profile").child(user.getUid());
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference()
+            .child("user_profile").child(user.getUid());
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -232,7 +235,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (databaseUser != null) {
                     String dbUserJson = gson.toJson(databaseUser);
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences prefs = PreferenceManager
+                        .getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("USER", dbUserJson);
                     editor.apply();
@@ -247,7 +251,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                showHintAlertDialog(getString(R.string.error), getString(R.string.error_try_again_later));
+                showHintAlertDialog(getString(R.string.error),
+                    getString(R.string.error_try_again_later));
             }
         });
     }
@@ -272,13 +277,16 @@ public class LoginActivity extends AppCompatActivity {
 
         if (exception.getErrorCode().equals("ERROR_USER_NOT_FOUND")) {
             trackInteraction("Login", "Error", "login_no_account");
-            showHintAlertDialog(getString(R.string.error), getString(R.string.login_no_account_error));
+            showHintAlertDialog(getString(R.string.error),
+                getString(R.string.login_no_account_error));
         } else if (exception.getErrorCode().equals("ERROR_WRONG_PASSWORD")) {
             trackInteraction("Login", "Error", "login_wrong_password");
-            showHintAlertDialog(getString(R.string.error), getString(R.string.login_wrong_password));
+            showHintAlertDialog(getString(R.string.error),
+                getString(R.string.login_wrong_password));
         } else {
             trackInteraction("Login", "Error", "login_default_error");
-            showHintAlertDialog(getString(R.string.error), getString(R.string.error_try_again_later));
+            showHintAlertDialog(getString(R.string.error),
+                getString(R.string.error_try_again_later));
         }
     }
 
@@ -310,10 +318,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
+
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 
     @Override

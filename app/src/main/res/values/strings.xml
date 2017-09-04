@@ -62,6 +62,7 @@
     <string name="main_nothing_sync">There is no data to synchronize.</string>
     <string name="main_weight_information">Weight Information</string>
     <string name="main_sync_button_title">Synchronize and Save</string>
+    <string name="main_button_first_weight">Add weight</string>
 
     <string name="user_welcome">Please entere here your personal details for your profile.</string>
     <string name="user_button_update">Update profile</string>
@@ -80,7 +81,7 @@
 
     <string name="menu_add">Add Weight</string>
     <string name="menu_progress">Progress</string>
-    <string name="menuSelectTime">Erinnerung</string>
+    <string name="menuSelectTime">Reminder</string>
     <string name="menu_sync">Synchronize</string>
     <string name="menu_download">Load Entries</string>
     <string name="menu_logout">Logout</string>

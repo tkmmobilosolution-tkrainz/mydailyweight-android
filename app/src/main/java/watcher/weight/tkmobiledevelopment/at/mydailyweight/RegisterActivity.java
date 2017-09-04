@@ -1,11 +1,7 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -15,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -36,11 +31,14 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog progressDialog = null;
     private TextView hintTitleView, hintMessageView;
     private EditText emailET, passwordET, passwordMatchET;
+    private FirebaseAnalytics analytics = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
+
+        analytics = FirebaseAnalytics.getInstance(this);
 
         emailET = (EditText) findViewById(R.id.registerEmail);
         passwordET = (EditText) findViewById(R.id.registerPassword);
@@ -61,7 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setMessage(getString(R.string.progressbar_register_user));
 
         LayoutInflater inflater = this.getLayoutInflater();
-        final AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(RegisterActivity.this);
+        final AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(
+            RegisterActivity.this);
         final View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
         hintTitleView = (TextView) hintAlertView.findViewById(R.id.hintTitleTextView);
         hintMessageView = (TextView) hintAlertView.findViewById(R.id.hintMessageTextView);
@@ -141,27 +140,31 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!passwordFormat(password)) {
             trackInteraction("Register", "Hint", "register_password_format");
-            showHintAlertDialog(getString(R.string.hint), getString(R.string.password_worng_format));
+            showHintAlertDialog(getString(R.string.hint),
+                getString(R.string.password_worng_format));
             return;
         }
 
         if (!passwordMatch(password, matchPassword)) {
             trackInteraction("Register", "Hint", "register_password_not_match");
-            showHintAlertDialog(getString(R.string.hint), getString(R.string.register_passwords_not_match));
+            showHintAlertDialog(getString(R.string.hint),
+                getString(R.string.register_passwords_not_match));
             return;
         }
 
-        if (emailFormat(email) && passwordFormat(password) && passwordMatch(password, matchPassword)) {
-            authentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (!task.isSuccessful()) {
-                        createUserFailed(task);
-                    } else {
-                        trackInteraction("Register", "Sign up", "register_user_registered");
+        if (emailFormat(email) && passwordFormat(password) && passwordMatch(password,
+            matchPassword)) {
+            authentication.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            createUserFailed(task);
+                        } else {
+                            trackInteraction("Register", "Sign up", "register_user_registered");
+                        }
                     }
-                }
-            });
+                });
         }
     }
 
@@ -169,17 +172,21 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseAuthException exception = (FirebaseAuthException) task.getException();
         if (exception.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
             trackInteraction("Register", "Error", "register_account_exists");
-            showHintAlertDialog(getString(R.string.error), getString(R.string.register_email_already_use));
+            showHintAlertDialog(getString(R.string.error),
+                getString(R.string.register_email_already_use));
         } else {
             trackInteraction("Register", "Error", "register_default_error");
-            showHintAlertDialog(getString(R.string.error), getString(R.string.error_try_again_later));
+            showHintAlertDialog(getString(R.string.error),
+                getString(R.string.error_try_again_later));
         }
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
+
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 }

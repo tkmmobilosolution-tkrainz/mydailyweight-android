@@ -26,12 +26,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
+    private FirebaseAnalytics analytics = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nav_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        analytics = FirebaseAnalytics.getInstance(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -141,9 +145,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
+
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 }
