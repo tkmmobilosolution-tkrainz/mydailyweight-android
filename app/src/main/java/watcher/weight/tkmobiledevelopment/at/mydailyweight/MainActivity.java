@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_list) {
             trackInteraction("NavDrawer", "Item", "nac_drawer_weight_list_clicked");
             fm.beginTransaction().replace(R.id.content_frame, new ListFragment()).commit();
+        } else if (id == R.id.nav_bmi) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_bmi");
+            fm.beginTransaction().replace(R.id.content_frame, new BmiFragment()).commit();
         } else if (id == R.id.nav_logout) {
             trackInteraction("NavDrawer", "Item", "nac_drawer_logout_clicked");
             syncDatabase();

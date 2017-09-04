@@ -813,15 +813,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.25.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="24.0.1"
-        sha1="474cccf169297d49fff89fd35b7634a7a9d1031c">
-        <dex dex="/Users/tkrainz/Documents/android_mdw/app/build/intermediates/pre-dexed/release/com.facebook.android-facebook-android-sdk-4.25.0_ef43eed7325a0d092993f55facb095919c77d4b0.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/tkrainz/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit2/converter-gson/2.0.0-beta4/de5935a367ba5e343e9df786ac8fc0c7d52b5f0c/converter-gson-2.0.0-beta4.jar"
         jumboMode="false"
         optimize="true"
