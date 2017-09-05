@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
 /**
@@ -21,12 +20,14 @@ public class WeightListAdapter extends BaseAdapter {
     private Context context;
     private double startWeight;
 
-    public WeightListAdapter(Context context, ArrayList<Weight> weightArrayList, ArrayList<BMI> bmiArrayList, double startWeight) {
+    public WeightListAdapter(Context context, ArrayList<Weight> weightArrayList,
+        ArrayList<BMI> bmiArrayList, double startWeight) {
         this.weightArrayList = weightArrayList;
         this.context = context;
         this.bmiArrayList = bmiArrayList;
         this.startWeight = startWeight;
     }
+
     @Override
     public int getCount() {
         return weightArrayList.size() > 0 ? weightArrayList.size() + 1 : 1;
@@ -51,7 +52,9 @@ public class WeightListAdapter extends BaseAdapter {
 
             v = vi.inflate(R.layout.list_item_placeholder, null);
             TextView placeholderTextView = (TextView) v.findViewById(R.id.placeholderTextView);
-            placeholderTextView.setText(weightArrayList.size() == 0 ? context.getResources().getString(R.string.add_first_weight) : context.getResources().getString(R.string.add_another_weight));
+            placeholderTextView.setText(weightArrayList.size() == 0 ? context.getResources()
+                .getString(R.string.add_first_weight)
+                : context.getResources().getString(R.string.add_another_weight));
         } else {
 
             v = vi.inflate(R.layout.weight_list_item, null);
@@ -65,11 +68,11 @@ public class WeightListAdapter extends BaseAdapter {
                 TextView difTextView = (TextView) v.findViewById(R.id.tvDiffernece);
 
                 if (dateTextView != null) {
-                    dateTextView.setText(context.getResources().getString(R.string.date) + " " + currentWeightItem.date);
+                    dateTextView.setText(currentWeightItem.date);
                 }
 
                 if (weightTextView != null) {
-                    weightTextView.setText(context.getResources().getString(R.string.weight) + " " + currentWeightItem.weightValue);
+                    weightTextView.setText(currentWeightItem.weightValue + "kg");
                 }
 
                 if (bmiTextView != null) {
@@ -86,9 +89,11 @@ public class WeightListAdapter extends BaseAdapter {
                     double differnece = startWeight - currentWeightItem.weightValue;
                     String difString = "";
                     if (currentWeightItem.weightValue > startWeight) {
-                        difString = "+"+String.format("%.2f", differnece)+"kg";
+                        difString = "+" + String.format("%.2f", differnece) + "kg";
                     } else if (currentWeightItem.weightValue < startWeight) {
-                        difString = "-"+String.format("%.2f", differnece)+"kg";
+                        difString = "-" + String.format("%.2f", differnece) + "kg";
+                    } else if (currentWeightItem.weightValue == startWeight && !currentWeightItem.date.equals(context.getString(R.string.start_weight))) {
+                        difString = "keine Veränderung";
                     }
                     difTextView.setText(difString);
                 }

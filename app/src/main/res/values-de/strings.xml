@@ -65,7 +65,6 @@
     <string name="main_sync_button_title">Synchronisieren und Speichern</string>
     <string name="main_button_first_weight">Gewicht eintragen</string>
 
-
     <string name="user_welcome">Gib hier bitte deine persöhnlichen Informationen für dein Profil an.</string>
     <string name="user_button_update">Aktualisiere Profil</string>
     <string name="user_no_nickname">Kein Benutzername eingegeben.</string>
@@ -80,6 +79,17 @@
     <string name="progressbar_loading">Lade ...</string>
     <string name="progressbar_sync">Synchronisiere ...</string>
     <string name="progressbar_update_user">Speichere Benutzer ...</string>
+
+    <string name="no_weight_difference">Keine Veränderung</string>
+    <string name="progress_dialog_title">Dein Fortschritt</string>
+    <string name="progress_lose_weight">Du hast bereits %1$skg abgenommen, es fehlen nur mehr %2$skg zu deinem Traumgewicht.</string>
+    <string name="progress_reach_desired_weight">Du hast %1$skg abgenommen. Herzlichen Glückwunsch, du hast dein Traumgewicht erreicht.</string>
+    <string name="progress_gained_weight">Du hast %1$skg zugenommen, es fehlen noch %2$skg zu deinem Traumgewicht.</string>
+    <string name="progress_bmi">Dein aktueller BMI beträgt %1$s, das bedeutet das du %2$s bist.</string>
+
+    <string name="overweight">übergewichtig</string>
+    <string name="normal_weight">normalgewichtig</string>
+    <string name="underweight">untergewichtig</string>
 
     <string name="menu_add">Gewicht eintragen</string>
     <string name="menu_progress">Fortschritt</string>

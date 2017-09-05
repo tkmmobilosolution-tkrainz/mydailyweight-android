@@ -162,6 +162,11 @@ public class ListFragment extends Fragment {
 
         today = getCurrentDate();
         list = getWeightList();
+
+        if (list.isEmpty() || !list.get(0).date.equals(getString(R.string.start_weight))) {
+            list.add(0, new Weight(Double.parseDouble(user.getCurrentWeight()), getString(R.string.start_weight)));
+        }
+
         bmiList = calculateBMI(list);
 
         infoButton = (Button) view.findViewById(R.id.infoButton);
@@ -295,9 +300,10 @@ public class ListFragment extends Fragment {
         bmiDetail = (TextView) bmiHintView.findViewById(R.id.tvProgressBmi);
         weightDetail = (TextView) bmiHintView.findViewById(R.id.tvProgressWeight);
         progressTitle = (TextView) bmiHintView.findViewById(R.id.tvProgressTitle);
-        progressTitle.setText("Fortschritts Information");
+        progressTitle.setText(getString(R.string.progress_dialog_title));
 
         Button bmiProgressButton = (Button) bmiHintView.findViewById(R.id.btnProgressOk);
+        bmiProgressButton.setText(getString(R.string.ok));
         bmiProgressButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -900,11 +906,11 @@ public class ListFragment extends Fragment {
     private String weightGroup(int bmiGroup) {
         switch (bmiGroup) {
             case 1:
-                return "untergewichtig";
+                return getString(R.string.underweight);
             case 2:
-                return "normalgewichtig";
+                return getString(R.string.normal_weight);
             case 3:
-                return "übergewichtig";
+                return getString(R.string.overweight);
         }
 
         return "";
@@ -914,32 +920,24 @@ public class ListFragment extends Fragment {
         String weightGroup = weightGroup(bmiGroup);
 
         double differnece = Double.parseDouble(user.getCurrentWeight()) - weight;
+        double dreamWeightDif = weight - Double.parseDouble(user.getDreamWeight());
+
         String difString = "";
         if (weight > Double.parseDouble(user.getCurrentWeight())) {
-            difString = "Du hast seit deinem Beginn " + String.format("%.2f", differnece)
-                + "kg zugenommen.";
+            difString = String.format(getString(R.string.progress_gained_weight), String.format("%.2f", differnece), String.format("%.2f", dreamWeightDif));
         } else if (weight < Double.parseDouble(user.getCurrentWeight())) {
-            difString = "Du hast seit deinem Beginn " + String.format("%.2f", differnece)
-                + "kg abgenommen.";
+            if (weight <= Double.parseDouble(user.getDreamWeight())) {
+                difString = String.format(getString(R.string.progress_reach_desired_weight), String.format("%.2f", differnece));
+            } else {
+                difString = String.format(getString(R.string.progress_lose_weight), String.format("%.2f", differnece), String.format("%.2f", dreamWeightDif));
+            }
         }
 
-        String dreamWeightString = "";
-        if (weight <= Double.parseDouble(user.getDreamWeight())) {
-            dreamWeightString = "Du hast dien Traumgewicht erreicht.";
-        } else {
-            double dreamWeightDif = weight - Double.parseDouble(user.getDreamWeight());
-            dreamWeightString =
-                "Zu deinem Traumgewicht fehlen dir noch " + String.format("%.2f", dreamWeightDif)
-                    + "kg.";
-        }
+        weightDetail.setText(difString);
 
-        weightDetail.setText(difString + "\n" + dreamWeightString);
+        String bmiString = String.format(getString(R.string.progress_bmi), String.format("%.2f", bmi), weightGroup);
 
-        String bmiString = "Dein momentaner BMI beträgt " + String.format("%.2f", bmi) + ". ";
-        String weightGroupString = "Das bedeutet, dass du " + weightGroup + " bist.";
-
-        bmiDetail.setText(bmiString + weightGroupString);
-
+        bmiDetail.setText(bmiString);
         progressWeightDialog.show();
     }
 }

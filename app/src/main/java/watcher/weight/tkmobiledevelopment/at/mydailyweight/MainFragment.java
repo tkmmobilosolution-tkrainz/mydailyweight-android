@@ -72,6 +72,8 @@ public class MainFragment extends Fragment {
 
     private boolean rewardedFinished = false;
 
+    private User user;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -80,6 +82,8 @@ public class MainFragment extends Fragment {
         setHasOptionsMenu(true);
 
         analytics = FirebaseAnalytics.getInstance(getActivity());
+
+        getProfile();
 
         View view = inflater.inflate(R.layout.activity_main, container, false);
 
@@ -147,6 +151,10 @@ public class MainFragment extends Fragment {
 
         today = getCurrentDate();
         list = getWeightList();
+
+        if (list.isEmpty() || !list.get(0).date.equals(getString(R.string.start_weight))) {
+            list.add(0, new Weight(Double.parseDouble(user.getCurrentWeight()), getString(R.string.start_weight)));
+        }
 
         String infoButtonString = list.isEmpty() ? getString(R.string.main_button_first_weight) : getString(R.string.main_sync_button_title);
         infoButton = (Button) view.findViewById(R.id.infoButton);
@@ -664,5 +672,30 @@ public class MainFragment extends Fragment {
         manager
             .setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
                 pi);
+    }
+
+    private void getProfile() {
+        SharedPreferences sharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(getActivity());
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString("USER", null);
+        user = gson.fromJson(json, User.class);
+
+        if (user == null) {
+            final DatabaseReference database = FirebaseDatabase.getInstance().getReference()
+                .child("user_profile")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    user = (User) dataSnapshot.getValue();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }

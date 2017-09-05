@@ -39,7 +39,7 @@
     <string name="gender">Gender</string>
     <string name="height">Height</string>
     <string name="start_weight">Start Weight</string>
-    <string name="dream_weight">Dream Weight</string>
+    <string name="dream_weight">Desired Weight</string>
 
     <string name="login_welcome">Welcome to MyDailyWeight, your personal weight diary.\n\n No account? Sign up for free, or sign in to your account.</string>
     <string name="login_sign_in">Sign in</string>
@@ -53,7 +53,7 @@
 
     <string name="main_sync_failed">Synchronization failed. Watch video till the end.</string>
     <string name="main_diff_sinde_begin">Progres since begin: </string>
-    <string name="main_till_end">Difference to dream weight: </string>
+    <string name="main_till_end">Difference to desired weight: </string>
     <string name="main_download_loose_data">If you are downloading new data you will loose some weight entries! Download data anyway?</string>
     <string name="main_download_anyway">Download anyway</string>
     <string name="main_nothing_download">There is no data to download. You are up to date.</string>
@@ -70,7 +70,7 @@
     <string name="user_no_age">No age entered.</string>
     <string name="user_no_height">No height entered.</string>
     <string name="user_no_current_weight">No start weight entered.</string>
-    <string name="user_no_dream_weight">No dream weight entered.</string>
+    <string name="user_no_dream_weight">No desired weight entered.</string>
 
     <string name="progressbar_sign_in">Sign in ...</string>
     <string name="progressbar_register_user">Register account ...</string>
@@ -85,6 +85,17 @@
     <string name="menu_sync">Synchronize</string>
     <string name="menu_download">Load Entries</string>
     <string name="menu_logout">Logout</string>
+
+    <string name="no_weight_difference">No difference</string>
+    <string name="progress_dialog_title">Your Progress</string>
+    <string name="progress_lose_weight">You already lost %1$skg, there are only %2$skg to your desired weight.</string>
+    <string name="progress_reach_desired_weight">You already lost %1$skg. Congratulation, you reached your desired weight.</string>
+    <string name="progress_gained_weight">You gained %1$skg, there are %2$skg to your desired weight.</string>
+    <string name="progress_bmi">Your current BMI is %1$s, this means you are %2$s.</string>
+    
+    <string name="overweight">overweight</string>
+    <string name="normal_weight">of normal weight</string>
+    <string name="underweight">underweight</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
