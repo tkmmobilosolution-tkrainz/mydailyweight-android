@@ -375,10 +375,6 @@ public class ListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuAdd:
-                trackInteraction("List", "Menu", "list_menu_add");
-                showAddDialog();
-                return true;
             case R.id.menuTimePicker:
                 trackInteraction("List", "Menu", "list_time_picker");
                 timeAlertDialog.show();

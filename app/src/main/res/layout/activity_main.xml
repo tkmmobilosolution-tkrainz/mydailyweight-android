@@ -32,6 +32,19 @@
         android:layout_height="220dp"
         />
 
+    <Button
+        android:text="Add"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primaryYellow"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_below="@+id/weightView"
+        android:id="@+id/addWeightButton" />
+
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

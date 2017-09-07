@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailET, passwordET;
     private boolean facebookLoginFlag = false;
     private FirebaseAnalytics analytics = null;
+    private boolean intentExtra = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     progressDialog.hide();
                     showMainActivity();
-                } else {
+                } else if (!intentExtra){
                     progressDialog.hide();
                     showUserActivity();
                 }

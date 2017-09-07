@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -322,6 +323,15 @@ public class MainFragment extends Fragment {
         timeHintBuilder.setView(timeHintView);
         timeAlertDialog = timeHintBuilder.create();
 
+        Button buttonAddWeight = (Button) view.findViewById(R.id.addWeightButton);
+        buttonAddWeight.setText(getString(R.string.menu_add));
+        buttonAddWeight.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trackInteraction("Main", "Button", "add_weight");
+                showAddDialog();
+            }
+        });
         return view;
     }
 
@@ -333,10 +343,6 @@ public class MainFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuAdd:
-                trackInteraction("Main", "Menu", "main_menu_add");
-                showAddDialog();
-                return true;
             case R.id.menuTimePicker:
                 trackInteraction("Main", "Menu", "main_time_picker");
                 timeAlertDialog.show();

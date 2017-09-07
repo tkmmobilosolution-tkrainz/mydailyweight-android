@@ -106,8 +106,45 @@
 
     <string name="navigation_drawer_overview">Übersicht</string>
 
-    <string name="navigation_drawer_profile">Profil</string>
+    <string name="navigation_drawer_profile">Konto</string>
+    <string name="navigation_drawer_edit_profile">Konto bearbeiten</string>
+    <string name="navigation_drawer_delete_account">Konto löschen</string>
+
+    <string name="navigation_drawer_about_us">Über uns</string>
+    <string name="navigation_drawer_privacy_policy">Datenschutzerklärung</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="privacy_policy"><![CDATA[
+<h2>Datenschutzerklärung</h2>
+<p>Die Nutzung unserer Seite ist ohne eine Angabe von personenbezogenen Daten möglich. Für die Nutzung einzelner Services unserer Seite können sich hierfür abweichende Regelungen ergeben, die in diesem Falle nachstehend gesondert erläutert werden. Ihre personenbezogenen Daten (z.B. Name, Anschrift, E-Mail, Telefonnummer, u.ä.) werden von uns nur gemäß den Bestimmungen des deutschen Datenschutzrechts verarbeitet. Daten sind dann personenbezogen, wenn sie eindeutig einer bestimmten natürlichen Person zugeordnet werden können. Die rechtlichen Grundlagen des Datenschutzes finden Sie im Bundesdatenschutzgesetz (BDSG) und dem Telemediengesetz (TMG). Nachstehende Regelungen informieren Sie insoweit über die Art, den Umfang und Zweck der Erhebung, die Nutzung und die Verarbeitung von personenbezogenen Daten durch den Anbieter</p>
+<p>Wir weisen darauf hin, dass die internetbasierte Datenübertragung Sicherheitslücken aufweist, ein lückenloser Schutz vor Zugriffen durch Dritte somit unmöglich ist.</p>
+
+<h3>Registrierungsfunktion</h3>
+<p>Wir bieten Ihnen auf unserer Seite die Möglichkeit, sich dort zu registrieren. Die im Zuge dieser Registrierung eingegebenen Daten, die aus der Eingabemaske des Registrierungsformular ersichtlich sind </p>
+<p>Registrierungsinformationen werden ausschließlich für die Verwendung unseres Angebots erhoben und gespeichert. Eine Weitergabe an Dritte erfolgt nicht. Ein Abgleich der so erhobenen Daten mit Daten, die möglicherweise durch andere Komponenten unserer Seite erhoben werden, erfolgt ebenfalls nicht.</p>
+
+<h3>Einsatz von Google-Analytics mit Anonymisierungsfunktion</h3>
+<p>Wir setzen auf unserer Seite Google-Analytics, einen Webanalysedienst der Firma Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043 USA, nachfolgend „Google“ ein. Google-Analytics verwendet sog. „Cookies“, Textdateien, die auf Ihrem Computer gespeichert werden und hierdurch eine Analyse der Benutzung der Website durch Sie ermöglichen.</p>
+<p>Die durch diese Cookies erzeugten Informationen, beispielsweise Zeit, Ort und Häufigkeit Ihres Webseiten-Besuchs einschließlich Ihrer IP-Adresse, werden an Google in den USA übertragen und dort gespeichert.</p>
+<p>Wir verwenden auf unserer Website Google-Analytics mit einer IP-Anonymisierungsfunktion. Ihre IP-Adresse wird in diesem Fall von Google schon innerhalb von Mitgliedstaaten der Europäischen Union oder in anderen Vertragsstaaten des Abkommens über den Europäischen Wirtschaftsraum gekürzt und dadurch anonymisiert.</p>
+<p>Google wird diese Informationen benutzen, um Ihre Nutzung unserer Seite auszuwerten, um Reports über die Websiteaktivitäten für uns zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen zu erbringen. Auch wird Google diese Informationen gegebenenfalls an Dritte übertragen, sofern dies gesetzlich vorgeschrieben oder soweit Dritte diese Daten im Auftrag von Google verarbeiten.</p>
+<p>Google wird, nach eigenen Angaben, in keinem Fall Ihre IP-Adresse mit anderen Daten von Google in Verbindung bringen. Sie können die Installation der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen unserer Website vollumfänglich nutzen können.</p>
+<p>Des Weiteren bietet Google für die gängigsten Browser eine Deaktivierungsoption an, welche Ihnen mehr Kontrolle darüber gibt, welche Daten von Google erfasst und verarbeitet werden. Sollte Sie diese Option aktivieren, werden keine Informationen zum Website-Besuch an Google Analytics übermittelt. Die Aktivierung verhindert aber nicht, dass Informationen an uns oder an andere von uns gegebenenfalls eingesetzte Webanalyse-Services übermittelt werden. Weitere Informationen zu der von Google bereitgestellten Deaktivierungsoption sowie zu der Aktivierung dieser Option, erhalten Sie über nachfolgenden Link: <a href="https://tools.google.com/dlpage/gaoptout?hl=de" target="_blank" rel="nofollow">https://tools.google.com/dlpage/gaoptout?hl=de</a></p>
+
+<h3>Einsatz von Google AdSense </h3>
+<p>Wir setzen auf unserer Website Google AdSense ein. Google AdSense ist ein Dienst der Firma Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043 USA, zum Einbinden von Werbeanzeigen. Google-AdSense verwendet sog. „Cookies“, somit Textdateien, die auf Ihrem Computer gespeichert werden und eine Analyse der Benutzung unserer Website ermöglichen. Weiter verwendet Google AdSense sogenannte Web Beacons. Durch diese Web Beacons ist es Google möglich, Informationen, wie zum Beispiel den Besucherfluss auf unserer Seite, auszuwerten. Diese Informationen werden neben Ihrer IP-Adresse und der Erfassung der angezeigten Werbeformate an Google in den USA übertragen, dort gespeichert und können von Google an Vertragspartner weiter gegeben werden. Google führt Ihre IP-Adresse jedoch nicht mit anderen von Ihnen gespeicherten Daten zusammen. Sie können die Installation der Cookies durch eine entsprechende Einstellung Ihres Browsers verhindern; wir weisen Sie jedoch darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen unserer Website vollumfänglich nutzen können.&nbsp;Mit der Nutzung unserer Website erklären Sie sich mit der Bearbeitung der über sie erhobenen Daten durch Google in der zuvor beschriebenen Art und Weise und zu dem zuvor benannten Zweck einverstanden.</p>
+
+<h3>Auskunft/Widerruf/Löschung</h3>
+<p>Sie können sich aufgrund des Bundesdatenschutzgesetzes bei Fragen zur Erhebung, Verarbeitung oder Nutzung Ihrer personenbezogenen Daten und deren Berichtigung, Sperrung, Löschung oder einem Widerruf einer erteilten Einwilligung unentgeltlich an uns wenden. Wir weisen darauf hin, dass Ihnen ein Recht auf Berichtigung falscher Daten oder Löschung personenbezogener Daten zusteht, sollte diesem Anspruch keine gesetzliche Aufbewahrungspflicht entgegenstehen.</p>
+<p>]]>
+</string>
+
+    <string name="privacy_policy_accept">Akzeptieren und Weiter</string>
+
+    <string name="delete_hint_text">Bist du dir sicher, dass du dein bestehendes Konto wirklich löschen willst? Wenn du dein Konto löscht, werden all deine Gewichtseinträge und all deine Kontodaten unwiderruflich gelöscht.</string>
+    <string name="delete_button">Löschen</string>
+
+    <string name="edit_profile_success">Du hast dein Konto erfolgreich bearbeitet</string>
 
 </resources>

@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/primaryYellow</item>
         <item name="colorPrimaryDark">@color/primaryYellow</item>
         <item name="actionBarPopupTheme">@style/PopupTheme</item>
-        <item name="windowActionBar">false</item>
+        <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
     </style>
 

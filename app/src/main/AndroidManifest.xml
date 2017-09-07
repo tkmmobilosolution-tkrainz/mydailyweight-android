@@ -51,6 +51,16 @@
 
         </activity>
 
+        <activity android:name=".PrivacyPolicyActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".EditProfileActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <service android:name=".NotiService"
             android:enabled="true" />
 
