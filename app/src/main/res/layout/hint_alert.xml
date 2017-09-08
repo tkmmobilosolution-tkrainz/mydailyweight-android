@@ -6,15 +6,29 @@
     android:background="@color/primaryGray">
 
     <TextView
+        android:text="Hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:id="@+id/hintTitleTextView"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
+    <TextView
         android:text="@string/add_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="@android:color/white"
-        android:id="@+id/hintTextView"
+        android:id="@+id/hintMessageTextView"
         android:textSize="20dp"
         android:textAlignment="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"/>
 

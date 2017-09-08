@@ -35,21 +35,22 @@
             android:layout_marginLeft="20dp"/>
 
         <EditText
+            android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:text=""
-            android:ems="10"
-            android:id="@+id/editText"
-            android:textSize="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:focusable="true"
+            android:paddingLeft="5dp"
             android:background="@color/secondaryGray"
+            android:ems="10"
+            android:focusable="true"
+            android:inputType="numberDecimal"
+            android:text=""
             android:textColor="@color/primaryYellow"
             android:textCursorDrawable="@null"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout

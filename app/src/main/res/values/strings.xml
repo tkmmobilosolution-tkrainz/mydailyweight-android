@@ -3,6 +3,8 @@
     <string name="banner_ad_unit_id">ca-app-pub-9184630521515163/5534260932</string>
     <string name="interstital_ad_unit_id">ca-app-pub-9184630521515163/7010994132</string>
     <string name="ad_mob_app_id">ca-app-pub-9184630521515163~4057527733</string>
+    <string name="ad_video">ca-app-pub-9184630521515163/2951480532</string>
+    <string name="facebook_app_id">762052760617441</string>
 
     <string name="weight">Weight:</string>
     <string name="date">Date:</string>
@@ -11,9 +13,136 @@
     <string name="add_hint">Hint: You already entered your weight today. Try again tomorrow.</string>
     <string name="no_weight_entered">Please enter a weight.</string>
 
+    <string name="notification_alert_title">Enter a notification time.</string>
+
     <string name="add_first_weight">Add your first weight entry</string>
     <string name="add_another_weight">Add your today´s weight</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="hint">Hint</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="no_connection">You are not connected to a network. Please check your network settings and try again.</string>
+    <string name="email_worng_format">The entered email address has the wrong format.\n\nExample: example@provider.com</string>
+    <string name="password_worng_format">The password must have a minimum length of 8 characters</string>
+    <string name="error_try_again_later">Somethings gone wrong. Please try agein later.</string>
+    <string name="try_again">Try agein</string>
+    <string name="register">Sign up</string>
+    <string name="logout">Logout</string>
+    <string name="progress">Progress</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="height">Height</string>
+    <string name="start_weight">Start Weight</string>
+    <string name="dream_weight">Desired Weight</string>
+
+    <string name="login_welcome">Welcome to MyDailyWeight, your personal weight diary.\n\n No account? Sign up for free, or sign in to your account.</string>
+    <string name="login_sign_in">Sign in</string>
+    <string name="login_sign_up">Sign up now!</string>
+    <string name="login_no_account_error">For the given email address no account was found..</string>
+    <string name="login_wrong_password">The given password does not match with the account.</string>
+
+    <string name="register_welcome">Register your new account with your email address and your custom password. The choosen password must have a minimum length of 8 characters.</string>
+    <string name="register_passwords_not_match">The entered passwords do not match.</string>
+    <string name="register_email_already_use">The given email is already in use. Please choose another one.</string>
+
+    <string name="main_sync_failed">Synchronization failed. Watch video till the end.</string>
+    <string name="main_diff_sinde_begin">Progres since begin: </string>
+    <string name="main_till_end">Difference to desired weight: </string>
+    <string name="main_download_loose_data">If you are downloading new data you will loose some weight entries! Download data anyway?</string>
+    <string name="main_download_anyway">Download anyway</string>
+    <string name="main_nothing_download">There is no data to download. You are up to date.</string>
+    <string name="main_logout_sync">There are some entries to sychronise before logout. When you logout the synchronization also will be done.</string>
+    <string name="main_logout_no_sync">Are you sure you want to logout?</string>
+    <string name="main_nothing_sync">There is no data to synchronize.</string>
+    <string name="main_weight_information">Weight Information</string>
+    <string name="main_sync_button_title">Synchronize and Save</string>
+    <string name="main_button_first_weight">Add weight</string>
+
+    <string name="user_welcome">Please entere here your personal details for your profile.</string>
+    <string name="user_button_update">Update profile</string>
+    <string name="user_no_nickname">No username entered.</string>
+    <string name="user_no_age">No age entered.</string>
+    <string name="user_no_height">No height entered.</string>
+    <string name="user_no_current_weight">No start weight entered.</string>
+    <string name="user_no_dream_weight">No desired weight entered.</string>
+
+    <string name="progressbar_sign_in">Sign in ...</string>
+    <string name="progressbar_register_user">Register account ...</string>
+    <string name="progressbar_refresh">Refesh</string>
+    <string name="progressbar_loading">Loading ...</string>
+    <string name="progressbar_sync">Synchronizing ...</string>
+    <string name="progressbar_update_user">Save user ...</string>
+
+    <string name="menu_add">Add Weight</string>
+    <string name="menu_progress">Progress</string>
+    <string name="menuSelectTime">Reminder</string>
+    <string name="menu_sync">Synchronize</string>
+    <string name="menu_download">Load Entries</string>
+    <string name="menu_logout">Logout</string>
+
+    <string name="no_weight_difference">No difference</string>
+    <string name="progress_dialog_title">Your Progress</string>
+    <string name="progress_lose_weight">You already lost %1$skg, there are only %2$skg to your desired weight.</string>
+    <string name="progress_reach_desired_weight">You already lost %1$skg. Congratulation, you reached your desired weight.</string>
+    <string name="progress_gained_weight">You gained %1$skg, there are %2$skg to your desired weight.</string>
+    <string name="progress_bmi">Your current BMI is %1$s, this means you are %2$s.</string>
+
+    <string name="overweight">overweight</string>
+    <string name="normal_weight">of normal weight</string>
+    <string name="underweight">underweight</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="navigation_drawer_weight_graph">Weight Diagram</string>
+    <string name="navigation_drawer_weight_list">Weight List</string>
+
+    <string name="navigation_drawer_overview">Overview</string>
+
+    <string name="navigation_drawer_profile">Account</string>
+    <string name="navigation_drawer_edit_profile">Edit Account</string>
+    <string name="navigation_drawer_delete_account">Delete Account</string>
+
+    <string name="navigation_drawer_privacy_policy">Privacy Policy</string>
+
+    <string name="navigation_drawer_about_us">About us</string>
+    <string name="privacy_policy"><![CDATA[
+
+<h2>Data Privacy Policy</h2>
+<p>Our website may be used without entering personal information. Different rules may apply to certain services on our site, however, and are explained separately below. We collect personal information from you (e.g. name, address, email address, telephone number, etc.) in accordance with the provisions of German data protection statutes. Information is considered personal if it can be associated exclusively to a specific natural person. The legal framework for data protection may be found in the German Federal Data Protection Act (BDSG) and the Telemedia Act (TMG). The provisions below serve to provide information as to the manner, extent and purpose for collecting, using and processing personal information by the provider.</p>
+<p> Please be aware that data transfer via the internet is subject to security risks and, therefore, complete protection against third-party access to transferred data cannot be ensured.</p>
+
+<h3>Purpose of Registering</h3>
+<p>We offer you the opportunity to sign up for our website. The information entered when signing up, as shown in the registration form</p>
+<p>This informations is collected and stored solely for use by our website. None of this information is transferred to third parties. Nor is any of this information matched to any information that may be collected by other components of our website.</p>
+
+<h4>Use of Google Analytics with anonymization</h4>
+<p>Our website uses Google Analytics, a web analysis service from Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043 USA, hereinafter referred to as “Google“. Google Analytics employs so-called “cookies“, text files that are stored to your computer in order to facilitate an analysis of your use of the site.</p>
+<p>The information generated by these cookies, such as time, place and frequency of your visits to our site, including your IP address, is transmitted to Google’s location in the US and stored there.</p>
+<p>We use Google Analytics with an IP anonymization feature on our website. In doing so, Google abbreviates and thereby anonymizes your IP address before transferring it from member states of the European Union or signatory states to the Agreement on the European Economic Area.</p>
+<p>Google will use this information to evaluate your usage of our site, to compile reports on website activity for us, and to provide other services related to website-&nbsp;and internet usage. Google may also transfer this information to third parties if this is required by law or to the extent this data is processed by third parties&nbsp;on Google´s behalf.</p>
+<p>Google states that it will in never associate your IP address with other data held by Google. You can prevent cookies from being installed by adjusting the settings on your browser software accordingly. You should be aware, however, that by doing so you may not be able to make full use of all the functions of our website.</p>
+<p>Google also offers a disabling option for the most common browsers, thus providing you with greater control over&nbsp;the data which is collected and processed by Google. If you enable this option, no information regarding your website visit is transmitted to Google Analytics. However, the activation does not prevent the transmission of information to us or to any other web analytics services we may use. For more information about the disabling option provided by Google, and how to enable this option, visit <a href="https://tools.google.com/dlpage/gaoptout?hl=de" target="_blank" rel="nofollow">https://tools.google.com/dlpage/gaoptout?hl=en</a></p>
+
+<h3>Use of Google AdSense </h3>
+<p>Our website employs Google AdSense. Google AdSense is a service of Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043 USA, for incorporating advertisements. Google-AdSense uses so-called “cookies“, text files, that are stored to your computer and which provide analysis of the use of our website. Furthermore, Google AdSense uses so-called “web beacons“. Web beacons allow Google to analyze information, such as visitor traffic to our website. This information, along with your IP address and the ad format displayed, is transmitted to Google in the US where it is stored and may be transferred by Google to contracting partners. However, Google does not merge your IP-address with other stored data on you. You can prevent cookies from being installed by adjusting the settings on your browser software accordingly. You should be aware, however, that by doing so you may not be able to make full use of all the functions of our website. By using our website you declare that you agree to the processing of data collected about you by Google in the manner previously described and for the purposes there specified.</p>
+
+<h3>Information/Cancellation/Deletion</h3>
+<p>On the basis of the Federal Data Protection Act, you may contact us at no cost if you have questions relating to the collection, processing or use of your personal information, if you wish to request the correction, blocking or deletion of the same, or if you wish to cancel explicitly granted consent. Please note that you have the right to have incorrect data corrected or to have personal data deleted, where such claim is not barred by any legal obligation to retain this data.</p>
+]]>
+</string>
+
+    <string name="privacy_policy_accept">Accept and continue</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="delete_hint_text">Are you sure, you want to delete your existing account? When you are deleting your account, all weight entries and all your account dates are irrevocably deleted.</string>
+    <string name="delete_button">Delete</string>
+
+    <string name="edit_profile_success">You updated your account successfully</string>
 </resources>

@@ -1,11 +1,15 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -27,6 +31,7 @@ public class WeightView extends View {
 
     private ArrayList<Weight> weightArrayList = new ArrayList<>();
     public void setWeightArrayList(ArrayList<Weight> list) {
+
         weightArrayList = list;
 
         if (weightArrayList.size() > 0) {
@@ -90,6 +95,7 @@ public class WeightView extends View {
         double effectiveViewWidth = endX - startX;
 
         double stepSize = (effectiveViewWidth) / (weightArrayList.size() - 1);
+
         double diff = highestValue - lessValue;
         double heightStep = (this.getHeight() - margin) / diff;
 

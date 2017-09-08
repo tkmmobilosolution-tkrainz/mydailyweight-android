@@ -1,325 +1,236 @@
 package watcher.weight.tkmobiledevelopment.at.mydailyweight;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MenuItemCompat;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
+import android.widget.TextView;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+    implements NavigationView.OnNavigationItemSelectedListener {
 
-    private AlertDialog addAlertDialog;
-    private AlertDialog hintAlertDialog;
-
-    private ArrayList<Weight> list = new ArrayList<>();
-    private ListView listView;
-    private WeightView weightView;
-    private String today;
-
-    private InterstitialAd mInterstitialAd;
-
+    private FirebaseAnalytics analytics = null;
+    private AlertDialog deleteDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.nav_drawer);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        MobileAds.initialize(getApplicationContext(), getString(R.string.ad_mob_app_id));
-        setAdvertisment();
+        analytics = FirebaseAnalytics.getInstance(this);
 
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstital_ad_unit_id));
-        requestNewInterstitial();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+            this, drawer, toolbar, R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-        trackInteraction("MainActivity", "start", "Screen_MainActivity");
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        today = getCurrentDate();
-        list = getWeightList();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
 
-        weightView = (WeightView) findViewById(R.id.weightView);
-        weightView.setVisibility(list.size() > 0 ? View.VISIBLE : View.GONE);
-        weightView.setWeightArrayList(list);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         LayoutInflater inflater = this.getLayoutInflater();
-        listView = (ListView) findViewById(R.id.wightList);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (list.size() == 0 || position == list.size()) {
-                    trackInteraction("List", "add", "Click_Add_List");
-                    showAddDialog();
-                }
-            }
-        });
-        listView.setDivider(new ColorDrawable(list.size() > 0 ? Color.WHITE : Color.TRANSPARENT));
-        listView.setAdapter(new WeightListAdapter(this, list));
+        AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(this);
+        View hintAlertView = inflater.inflate(R.layout.logout_hint, null);
 
-        AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(this);
-        View addAlertView = inflater.inflate(R.layout.add_alert, null);
+        TextView deleteTitle = (TextView) hintAlertView.findViewById(R.id.logoutHintTitle);
+        deleteTitle.setText(getString(R.string.hint));
 
-        final EditText newWeight = (EditText) addAlertView.findViewById(R.id.editText);
+        TextView deleteText = (TextView) hintAlertView.findViewById(R.id.logoutHintMessage);
+        deleteText.setText(getString(R.string.delete_hint_text));
 
-        Button addButton = (Button) addAlertView.findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        Button deleteButton = (Button) hintAlertView.findViewById(R.id.logoutHintButton);
+        deleteButton.setText(getString(R.string.delete_button));
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (newWeight.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_weight_entered), Toast.LENGTH_LONG).show();
-                } else {
-                    trackInteraction("Button", "Add", "Click_Add_Button");
-                    double weight = Double.parseDouble(newWeight.getText().toString());
-                    Weight currentWeight = new Weight(weight, today);
-                    list.add(currentWeight);
-                    refreshLayout(list);
-                    addAlertDialog.dismiss();
-                }
+                trackInteraction("Button", "Hint", "delete_user_clicked");
+                deleteUser();
             }
         });
 
-        Button cancelButton = (Button) addAlertView.findViewById(R.id.cancelButton);
+        Button cancelButton = (Button) hintAlertView.findViewById(R.id.cancelHintButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                trackInteraction("Button", "Cancel", "Click_Cancel_Button");
-                addAlertDialog.dismiss();
-            }
-        });
-
-        addDialogBuilder.setView(addAlertView);
-        addAlertDialog = addDialogBuilder.create();
-        addAlertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-        AlertDialog.Builder dialogHintBuilder = new AlertDialog.Builder(this);
-        View hintAlertView = inflater.inflate(R.layout.hint_alert, null);
-
-        Button hintButton = (Button) hintAlertView.findViewById(R.id.hintButton);
-        hintButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                trackInteraction("Button", "Hint", "Click_Hint_Button");
-                hintAlertDialog.dismiss();
+                trackInteraction("Button", "Hint", "delete_user_cancel");
+                deleteDialog.dismiss();
             }
         });
 
         dialogHintBuilder.setView(hintAlertView);
-        hintAlertDialog = dialogHintBuilder.create();
+        deleteDialog = dialogHintBuilder.create();
+
+        trackInteraction("NavDrawer", "Start", "nav_drawer_start_graph");
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem menuItem_Info = menu.add(0, R.id.menuid_add, 0, "").setIcon(android.R.drawable.ic_menu_edit);
-        MenuItemCompat.setShowAsAction(menuItem_Info,
-                MenuItem.SHOW_AS_ACTION_IF_ROOM|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menuid_add) {
-            trackInteraction("Menu", "Add", "Click_Add_Menu");
-            showAddDialog();
-        }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
-    private void refreshLayout(ArrayList<Weight> list) {
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-        saveList(list);
-        weightView.setWeightArrayList(list);
-        weightView.setVisibility(list.size() != 0 ? View.VISIBLE : View.GONE);
-        weightView.invalidate();
-        listView.setDivider(new ColorDrawable(Color.WHITE));
-        listView.setDividerHeight(1);
-        listView.setAdapter(new WeightListAdapter(getApplicationContext(), list));
-        listView.setSelection(list.size() - 1);
-        listView.invalidateViews();
+        FragmentManager fm = getSupportFragmentManager();
 
-        if (list.size() % 5 == 0) {
-
-            mInterstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    trackInteraction("Interstitial", "closed", "Interstitial_Closed");
-                }
-
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    super.onAdFailedToLoad(i);
-                    switch (i) {
-                        case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Internal_Error");
-                            break;
-                        case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Invalid_Request");
-                            break;
-                        case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Network_Error");
-                            break;
-                        case AdRequest.ERROR_CODE_NO_FILL:
-                            trackInteraction("Interstitial", "failed", "Interstitial_No_Ad");
-                            break;
-                        default:
-                            trackInteraction("Interstitial", "failed", "Interstitial_Failed_Default");
-                    }
-                }
-
-                @Override
-                public void onAdLeftApplication() {
-                    super.onAdLeftApplication();
-                    trackInteraction("Interstitial", "leftApp", "Interstitial_Left");
-                }
-
-                @Override
-                public void onAdOpened() {
-                    super.onAdOpened();
-                    trackInteraction("Interstitial", "opened", "Interstitial_Opened");
-                }
-
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    trackInteraction("Interstitial", "loaded", "Interstitial_Loaded");
-                }
-            });
-
-            if (mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
-            }
+        if (id == R.id.nav_weight) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_weight_graph_clicked");
+            fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
+        } else if (id == R.id.nav_list) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_weight_list_clicked");
+            fm.beginTransaction().replace(R.id.content_frame, new ListFragment()).commit();
+        } else if (id == R.id.nav_logout) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_logout_clicked");
+            syncDatabase();
+        } else if (id == R.id.privacy_policy) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_privacy_polic");
+            fm.beginTransaction().replace(R.id.content_frame, new PrivacyPolicyMenuFragment())
+                .commit();
+        } else if (id == R.id.edit_profile) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_edit_account");
+            startActivity(new Intent(MainActivity.this, EditProfileActivity.class));
+        /**} else if (id == R.id.delete_account) {
+            trackInteraction("NavDrawer", "Item", "nav_drawer_delete_profile");
+            deleteDialog.show(); **/
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
-    private void showAddDialog() {
-        if (list.size() == 0) {
-            trackInteraction("Add", "first", "Weight_Add_First");
-            addAlertDialog.show();
-        } else if (list.get(list.size() - 1).date.equals(today)) {
-            trackInteraction("Add", "tomorrow", "Weight_Add_Tomorrow");
-            hintAlertDialog.show();
-        } else {
-            trackInteraction("Add", "more", "Weight_Add_More");
-            addAlertDialog.show();
-        }
-    }
+    private void logout() {
+        trackInteraction("NavDrawer", "Logout", "activity_logout");
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
 
-    private void saveList(ArrayList<Weight> list) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        Gson gson = new Gson();
-
-        String json = gson.toJson(list);
-
-        editor.putString("list", json);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("USER");
+        editor.remove("list");
+        editor.remove("able_sync");
+        editor.remove("logoutsync");
         editor.apply();
+
+        trackInteraction("NavDrawer", "Intent", "logout_open_login");
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
-    private ArrayList<Weight> getWeightList() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    private void syncDatabase() {
+        trackInteraction("NavDrawer", "Sync", "sync_nav_drawer");
+        ProgressDialog progressDialog = new ProgressDialog(this, R.style.SpinnerTheme);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+        progressDialog.setMessage(getString(R.string.progressbar_sync));
+        progressDialog.show();
+        SharedPreferences sharedPrefs = PreferenceManager
+            .getDefaultSharedPreferences(this);
+
         Gson gson = new Gson();
         String json = sharedPrefs.getString("list", null);
-        Type type = new TypeToken<ArrayList<Weight>>() {}.getType();
-        ArrayList<Weight> l = gson.fromJson(json, type);
-        return l == null ? new ArrayList<Weight>() : l;
+        Type type = new TypeToken<ArrayList<Weight>>() {
+        }.getType();
+        ArrayList<Weight> list = gson.fromJson(json, type);
+
+        FirebaseDatabase.getInstance().getReference().child("user_weights")
+            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+            .setValue(list);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean("able_sync", false);
+        editor.apply();
+
+        logout();
+
+        progressDialog.hide();
     }
 
-    private String getCurrentDate() {
-        Calendar c = Calendar.getInstance();
+    private void deleteUser() {
+        final FirebaseAuth firebaseUser = FirebaseAuth.getInstance();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy");
-        return df.format(c.getTime());
-    }
+        DatabaseReference userProfile = FirebaseDatabase.getInstance().getReference()
+            .child("user_profile")
+            .child(firebaseUser.getCurrentUser().getUid());
+        userProfile.removeValue();
 
-    private void setAdvertisment() {
+        DatabaseReference userWeights = FirebaseDatabase.getInstance().getReference()
+            .child("user_weights")
+            .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userWeights.removeValue();
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        SharedPreferences prefs = PreferenceManager
+            .getDefaultSharedPreferences(MainActivity.this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("USER");
+        editor.remove("list");
+        editor.remove("able_sync");
+        editor.remove("logoutsync");
+        editor.apply();
 
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                trackInteraction("Banner", "closed", "Banner_Closed");
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                trackInteraction("Banner", "loaded", "Banner_Loaded");
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                switch (i) {
-                    case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                        trackInteraction("Banner", "failed", "Banner_Internal_Error");
-                        break;
-                    case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                        trackInteraction("Banner", "failed", "Banner_Invalid_Request");
-                        break;
-                    case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                        trackInteraction("Banner", "failed", "Banner_Network_Error");
-                        break;
-                    case AdRequest.ERROR_CODE_NO_FILL:
-                        trackInteraction("Banner", "failed", "Banner_No_Ad");
-                        break;
-                    default:
-                        trackInteraction("Banner", "failed", "Banner_Failed_Default");
-                }
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-                trackInteraction("Banner", "opened", "Banner_Opened");
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                super.onAdLeftApplication();
-                trackInteraction("Banner", "leftApp", "Banner_Left");
-            }
-        });
+        trackInteraction("MainActivity", "Account", "delete_account");
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.putExtra("delete", true);
+        startActivity(intent);
     }
 
     private void trackInteraction(String key, String value, String event) {
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         Bundle track = new Bundle();
         track.putString(key, value);
-        analytics.logEvent(event, track);
 
-    }
-
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mInterstitialAd.loadAd(adRequest);
+        if (analytics != null) {
+            analytics.logEvent(event, track);
+        }
     }
 }

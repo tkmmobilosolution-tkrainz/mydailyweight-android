@@ -12,24 +12,39 @@
     android:background="@color/primaryGray"
     tools:context="watcher.weight.tkmobiledevelopment.at.mydailyweight.MainActivity">
 
+
+    <Button
+        android:text="Progress"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primaryYellow"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:id="@+id/infoButton" />
+
     <watcher.weight.tkmobiledevelopment.at.mydailyweight.WeightView
         android:id="@+id/weightView"
         android:layout_width="match_parent"
+        android:layout_below="@id/infoButton"
         android:layout_height="220dp"
         />
 
-    <ListView
-        android:id="@+id/wightList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/adView"
-        android:layout_below="@+id/weightView"
-        android:layout_alignParentStart="true"
+    <Button
+        android:text="Add"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primaryYellow"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="9dp"
-        android:divider="@android:color/white"
-        android:dividerHeight="1dp" />
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_below="@+id/weightView"
+        android:id="@+id/addWeightButton" />
+
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

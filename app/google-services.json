@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "262469372283-icjhh6hhhc9kgge6p1nbtn0si9l9gpne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "watcher.weight.tkmobiledevelopment.at.mydailyweight",
+            "certificate_hash": "ab5e19887a62ffe48e3f1408597ccc78d901881c"
+          }
+        },
+        {
           "client_id": "262469372283-7uh6etn6our2a1p4bf7ilq3el1uvrclb.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262469372283-7uh6etn6our2a1p4bf7ilq3el1uvrclb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/navigation_drawer_overview">
+        <menu>
+            <item
+                android:id="@+id/nav_weight"
+                android:title="@string/navigation_drawer_weight_graph" />
+            <item
+                android:id="@+id/nav_list"
+                android:title="@string/navigation_drawer_weight_list" />
+        </menu>
+    </item>
+
+    <item android:title="@string/navigation_drawer_profile">
+        <menu>
+
+            <item
+                android:id="@+id/edit_profile"
+                android:title="@string/navigation_drawer_edit_profile" />
+            <item
+                android:id="@+id/nav_logout"
+                android:title="@string/logout" />
+        </menu>
+    </item>
+
+    <item android:title="@string/navigation_drawer_about_us">
+        <menu>
+            <item
+                android:id="@+id/privacy_policy"
+                android:title="@string/navigation_drawer_privacy_policy" />
+        </menu>
+    </item>
+
+</menu>
